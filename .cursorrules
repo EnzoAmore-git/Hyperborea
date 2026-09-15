@@ -1,0 +1,10 @@
+Ты работаешь над проектом Hyperborea — интерактивным сайтом для чтения комикса в формате вебтун.
+
+Стек: HTML5, Vanilla JS, Tailwind CSS, GSAP + ScrollTrigger, Lenis.js (smooth scroll).
+Дизайн: Dark mode (#0f0f0f), Glassmorphism, Vertical infinite scroll.
+Анимации: Parallax, fade-in panels, typewriter bubbles, elastic pop-ins.
+Запрещено: Bootstrap, jQuery, React/Vue (пока).
+Приоритет: Плавность скролла (60fps) и читаемость текста.
+
+Текущий статус: Инициализация проекта, создание структуры.
+Следующая задача: Настройка дизайн-системы и базовых анимаций.
