@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { AnimatePresence } from 'framer-motion';
 import { characters, filterByCharacter } from '../data/gallery.js';
+import SectionTitle from './SectionTitle.jsx';
 import GalleryFilter from './GalleryFilter.jsx';
 import ArtCard from './ArtCard.jsx';
 import Lightbox from './Lightbox.jsx';
@@ -14,10 +15,7 @@ export default function Gallery() {
   return (
     <section className="section gallery" id="gallery">
       <div className="container">
-        <div className="section-title-wrap">
-          <p className="meta">02 — Концепты</p>
-          <h2 className="section-title">Концепты</h2>
-        </div>
+        <SectionTitle num="02 — Концепты" title="Концепты" />
       </div>
 
       <div className="container gallery__split">
@@ -30,9 +28,11 @@ export default function Gallery() {
         </aside>
 
         <div className="gallery__grid">
-          {items.map((art) => (
-            <ArtCard key={art.id} art={art} onOpen={setSelected} />
-          ))}
+          <AnimatePresence mode="popLayout" initial={false}>
+            {items.map((art) => (
+              <ArtCard key={art.id} art={art} onOpen={setSelected} />
+            ))}
+          </AnimatePresence>
         </div>
       </div>
 

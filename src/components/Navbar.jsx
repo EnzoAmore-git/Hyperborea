@@ -1,8 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
-import { DURATION, EASING } from '../animations/timing.js';
+import { DURATION, EASING, prefersReducedMotion } from '../animations/timing.js';
 import { getLenis } from '../animations/lenis.js';
+import { loadGSAP } from '../animations/gsapSetup.js';
+import { useFocusTrap } from '../lib/focusTrap.js';
 
 const LINKS = [
   { label: 'О проекте', href: '#about' },
@@ -34,7 +36,41 @@ function RuneLogo() {
 export default function Navbar() {
   const [open, setOpen] = useState(false);
   const menuRef = useRef(null);
+  const navRef = useRef(null);
   const { pathname, hash } = useLocation();
+
+  // Скрытие по направлению скролла (DoD 5.3): вниз — прячем, вверх — показываем
+  useEffect(() => {
+    if (!navRef.current || prefersReducedMotion()) return undefined;
+    let cancelled = false;
+    let cleanup = () => {};
+    loadGSAP().then(({ gsap, ScrollTrigger }) => {
+      if (cancelled || !navRef.current) return;
+      const el = navRef.current;
+      if (open) {
+        gsap.set(el, { yPercent: 0 });
+        return;
+      }
+      const st = ScrollTrigger.create({
+        start: 96,
+        end: 'max',
+        onUpdate: (self) => {
+          const hidden = self.direction === 1 && self.scroll() > 96;
+          gsap.to(el, {
+            yPercent: hidden ? -100 : 0,
+            duration: DURATION.medium / 1000,
+            ease: EASING.smooth,
+            overwrite: 'auto',
+          });
+        },
+      });
+      cleanup = () => st.kill();
+    });
+    return () => {
+      cancelled = true;
+      cleanup();
+    };
+  }, [open]);
 
   // Закрываем меню при смене маршрута (переход по ссылке)
   useEffect(() => {
@@ -63,6 +99,13 @@ export default function Navbar() {
     if (open) menuRef.current?.focus();
   }, [open]);
 
+  // Фокус-ловушка + inert на контенте (DoD 6.1)
+  useFocusTrap({
+    active: open,
+    rootRef: menuRef,
+    inertSelectors: ['.site-main', '.site-footer'],
+  });
+
   const smoothScrollTo = (href) => {
     if (!href.startsWith('#')) return;
     const lenis = getLenis();
@@ -84,7 +127,7 @@ export default function Navbar() {
   };
 
   return (
-    <header className="navbar">
+    <header className="navbar" ref={navRef}>
       <nav className="navbar__inner container" aria-label="Основная навигация">
         <Link to="/" className="navbar__logo" aria-label="Hyperborea — на главную">
           <RuneLogo />

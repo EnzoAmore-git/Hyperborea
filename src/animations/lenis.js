@@ -1,44 +1,50 @@
 /**
- * Гладкий скролл Lenis + синхронизация с GSAP ScrollTrigger.
+ * Гладкий скролл Lenis (DoD 2.4).
  * При prefers-reduced-motion: reduce Lenis НЕ инициализируется —
- * остаётся обычный нативный скролл (DoD 2.4).
+ * остаётся обычный нативный скролл.
+ * Синхронизация с GSAP ScrollTrigger происходит в этапе 5
+ * (scrollReveal/parallax), там же подключается gsap — чтобы держать
+ * gsap вне главного чанка.
+ * Этап 7.2: сам Lenis тоже подключается динамически (`import()`) —
+ * не лежит критическим путём, не попадает в modulepreload первого экрана.
  */
-import Lenis from '@studio-freight/lenis';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-
 let lenis = null;
+let lenisPromise = null;
 
 export function initLenis() {
-  if (lenis) return lenis;
-
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
     return null;
   }
+  if (!lenisPromise) {
+    lenisPromise = import('@studio-freight/lenis').then(({ default: Lenis }) => {
+      if (lenis) return lenis;
+      lenis = new Lenis({
+        duration: 1.2,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        smoothWheel: true,
+        touchMultiplier: 1.4,
+      });
 
-  gsap.registerPlugin(ScrollTrigger);
+      // RAF-цикл через requestAnimationFrame (без gsap.ticker).
+      // StrictMode в dev монтирует/размонтирует App — защищаемся от null после destroy.
+      const raf = (time) => {
+        if (lenis) lenis.raf(time);
+        requestAnimationFrame(raf);
+      };
+      requestAnimationFrame(raf);
 
-  lenis = new Lenis({
-    duration: 1.2,
-    easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-    smoothWheel: true,
-    touchMultiplier: 1.4,
-  });
-
-  // Синхронизация таймера Lenis с GSAP-тикером и ScrollTrigger
-  lenis.on('scroll', ScrollTrigger.update);
-  gsap.ticker.add((time) => {
-    lenis.raf(time * 1000);
-  });
-  gsap.ticker.lagSmoothing(0);
-
-  return lenis;
+      return lenis;
+    });
+  }
+  return lenisPromise;
 }
 
 export function destroyLenis() {
-  if (!lenis) return;
-  lenis.destroy();
-  lenis = null;
+  if (lenis) {
+    lenis.destroy();
+    lenis = null;
+  }
+  lenisPromise = null;
 }
 
 export function getLenis() {

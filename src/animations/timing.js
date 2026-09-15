@@ -22,4 +22,9 @@ export const EASING = {
   enter: [0.11, 0, 0.5, 0],
 };
 
+/* Общий хелпер: prefers-reduced-motion */
+export const prefersReducedMotion = () =>
+  typeof window !== 'undefined' &&
+  window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
 export default { DURATION, EASING };

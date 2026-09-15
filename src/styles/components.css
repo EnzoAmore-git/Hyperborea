@@ -1032,3 +1032,505 @@ input[type='radio'] {
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 }
+
+/* ============================================================
+   Читалка комикса (Этап 4)
+   Полноэкранный режим (z: --z-reader), зоны клика, прогресс,
+   панель глав, скелетоны и плейсхолдеры ошибок.
+   ============================================================ */
+
+.reader {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-reader);
+  background: var(--bg-void);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.reader:focus-visible {
+  outline: none;
+}
+
+.reader__stage {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+}
+
+.reader__layer {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  will-change: transform, opacity, filter;
+}
+
+.reader__img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* зоны клика вперёд/назад */
+.reader__zone {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 50%;
+  z-index: 1;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  cursor: pointer;
+  opacity: 0;
+}
+
+.reader__zone--prev {
+  left: 0;
+}
+
+.reader__zone--next {
+  right: 0;
+}
+
+/* верхняя/нижняя панели */
+.reader__top,
+.reader__bottom {
+  position: absolute;
+  left: 0;
+  right: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+}
+
+.reader__top {
+  top: 0;
+  background: linear-gradient(180deg, rgba(11, 10, 16, 0.9), transparent);
+}
+
+.reader__bottom {
+  bottom: 0;
+  background: linear-gradient(0deg, rgba(11, 10, 16, 0.9), transparent);
+}
+
+.reader__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 0.875rem;
+  border: 1px solid var(--line-subtle);
+  border-radius: var(--radius-sm);
+  background: rgba(18, 16, 26, 0.75);
+  color: var(--text-secondary);
+  font-family: var(--font-body);
+  font-size: var(--fs-small);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition:
+    background-color var(--dur-fast) var(--ease-standard),
+    border-color var(--dur-fast) var(--ease-standard),
+    color var(--dur-fast) var(--ease-standard);
+}
+
+.reader__btn:hover:not(:disabled) {
+  border-color: var(--accent-gold-40);
+  color: var(--text-primary);
+}
+
+.reader__btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.reader__btn--chapters {
+  margin-left: auto;
+}
+
+.reader__meta {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: var(--font-mono);
+  font-size: var(--fs-caption);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+}
+
+/* прогресс-бар */
+.reader__seek {
+  flex: 0 1 260px;
+  height: 3px;
+  border-radius: var(--radius-full);
+  background: var(--line-subtle);
+  overflow: hidden;
+}
+
+.reader__seek-fill {
+  height: 100%;
+  width: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--accent-ember), var(--accent-gold));
+  transform-origin: left;
+  transform: scaleX(0);
+  transition: transform var(--dur-medium) var(--ease-smooth);
+}
+
+/* подсказка клавиш */
+.reader__hint {
+  position: absolute;
+  left: 50%;
+  bottom: var(--space-8);
+  transform: translateX(-50%) translateY(8px);
+  z-index: 2;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--line-subtle);
+  border-radius: var(--radius-md);
+  background: rgba(18, 16, 26, 0.85);
+  color: var(--text-secondary);
+  font-family: var(--font-mono);
+  font-size: var(--fs-caption);
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    opacity var(--dur-medium) var(--ease-smooth),
+    transform var(--dur-medium) var(--ease-smooth);
+}
+
+.reader__hint--visible {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* панель глав (dialog) */
+.reader__panel {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  display: grid;
+  place-items: center;
+  padding: var(--space-4);
+  background: rgba(7, 6, 10, 0.88);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.reader__panel-card {
+  width: min(460px, 100%);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border: 1px solid var(--line-subtle);
+  border-radius: var(--radius-lg);
+  background: var(--bg-raised);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+}
+
+/* «Продолжить чтение» — сохранённая позиция (Этап 6.6) */
+.reader__resume {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.25rem;
+  width: 100%;
+  padding: var(--space-2) var(--space-3);
+  margin-bottom: var(--space-1);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--accent-gold-40);
+  background: var(--accent-gold-10);
+  color: var(--text-primary);
+  text-align: left;
+  cursor: pointer;
+  font: inherit;
+}
+
+.reader__resume-label {
+  font-size: var(--fs-tiny);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent-gold);
+}
+
+.reader__resume-target {
+  font-family: var(--font-display);
+  font-size: var(--fs-h3);
+}
+
+.reader__chapters {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.reader__chapter {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  width: 100%;
+  padding: var(--space-2);
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--text-secondary);
+  font-family: var(--font-body);
+  text-align: left;
+  cursor: pointer;
+  transition:
+    background-color var(--dur-fast) var(--ease-standard),
+    border-color var(--dur-fast) var(--ease-standard),
+    color var(--dur-fast) var(--ease-standard);
+}
+
+.reader__chapter:hover {
+  background: var(--accent-gold-10);
+  border-color: var(--line-subtle);
+}
+
+.reader__chapter--active {
+  border-color: var(--accent-ember-40);
+  background: var(--accent-ember-10);
+  color: var(--text-primary);
+}
+
+.reader__chapter-num {
+  font-family: var(--font-mono);
+  font-size: var(--fs-caption);
+  color: var(--accent-gold);
+}
+
+.reader__chapter-titles {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  line-height: 1.25;
+}
+
+.reader__chapter-titles strong {
+  font-weight: 600;
+  font-size: var(--fs-body);
+}
+
+.reader__chapter-titles em {
+  font-style: normal;
+  font-size: var(--fs-small);
+  color: var(--text-muted);
+}
+
+/* полноэкранный отчёт об ошибке главы */
+.reader__fatal {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  display: grid;
+  place-items: center;
+  padding: var(--space-4);
+  background: var(--bg-void);
+}
+
+/* fallback Suspense при загрузке чанка читалки */
+.reader-suspense {
+  position: fixed;
+  inset: 0;
+  z-index: calc(var(--z-reader) - 10);
+  background: var(--bg-void);
+}
+
+/* ----- скелетон страницы (shimmer) ----- */
+.reader-loading {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: var(--space-3);
+  background: var(--bg-deep);
+}
+
+.reader-loading--full {
+  z-index: 4;
+  background: var(--bg-void);
+}
+
+.reader-loading__box {
+  width: min(78vw, 460px);
+  aspect-ratio: 3 / 4;
+  border: 1px solid var(--line-subtle);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.reader-loading__shimmer {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    100deg,
+    var(--bg-raised) 35%,
+    var(--surface) 50%,
+    var(--bg-raised) 65%
+  );
+  background-size: 220% 100%;
+  animation: reader-shimmer 1.4s linear infinite;
+}
+
+.reader-loading__label {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: var(--fs-caption);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+}
+
+@keyframes reader-shimmer {
+  to {
+    background-position: -220% 0;
+  }
+}
+
+/* ----- плейсхолдер ошибки страницы ----- */
+.reader-error {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: var(--space-2);
+  padding: var(--space-4);
+  text-align: center;
+  background: var(--bg-deep);
+}
+
+.reader-error--full {
+  background: var(--bg-void);
+}
+
+.reader-error__icon {
+  color: var(--accent-blood);
+  margin-bottom: var(--space-1);
+}
+
+.reader-error__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--fs-h3);
+  color: var(--text-primary);
+}
+
+.reader-error__note {
+  margin: 0;
+  font-size: var(--fs-small);
+  color: var(--text-secondary);
+}
+
+.reader-error__actions {
+  display: flex;
+  gap: var(--space-2);
+  margin-top: var(--space-2);
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+/* mobile: прячем верхний meta-текст, оставляем кнопки */
+@media (max-width: 480px) {
+  .reader__top .reader__meta {
+    display: none;
+  }
+
+  .reader__btn {
+    padding: 0.5rem 0.625rem;
+    font-size: var(--fs-tiny);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reader__seek-fill {
+    transition: none;
+  }
+
+  .reader-loading__shimmer {
+    animation: none;
+  }
+
+  .reader__hint {
+    transition: none;
+  }
+}
+
+/* ----- граница ошибок региона (Этап 6.4) ----- */
+.error-boundary {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-2);
+  padding: var(--section-pad) var(--gutter-mobile);
+  margin: calc(var(--section-pad) * -1) var(--gutter-mobile) 0;
+  text-align: center;
+}
+
+.error-boundary__title {
+  margin: 0;
+  font-family: var(--font-display);
+  color: var(--accent-blood);
+}
+
+.error-boundary__text {
+  margin: 0;
+  max-width: 30rem;
+  color: var(--text-muted);
+}
+
+.error-boundary__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  justify-content: center;
+  margin-top: var(--space-1);
+}
+
+/* ----- баннер офлайн-режима (Этап 6.6) ----- */
+.offline-banner {
+  position: fixed;
+  left: 50%;
+  bottom: var(--space-4);
+  transform: translateX(-50%);
+  z-index: var(--z-navbar);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  max-width: min(92vw, 30rem);
+  padding: var(--space-2) var(--space-3);
+  border-radius: 999px;
+  background: var(--bg-raised);
+  border: 1px solid var(--accent-gold-40);
+  box-shadow: 0 0 24px var(--accent-gold-20);
+  font-size: var(--fs-small);
+  color: var(--text-primary);
+  text-align: left;
+}
+
+.offline-banner__dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: var(--accent-blood);
+  box-shadow: 0 0 8px var(--accent-blood);
+  flex: none;
+}

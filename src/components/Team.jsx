@@ -1,17 +1,15 @@
 import { team } from '../data/team.js';
+import SectionTitle from './SectionTitle.jsx';
 
 export default function Team() {
   return (
     <section className="section team" id="team">
       <div className="container">
-        <div className="section-title-wrap">
-          <p className="meta">03 — Команда</p>
-          <h2 className="section-title">Команда</h2>
-        </div>
+        <SectionTitle num="03 — Команда" title="Команда" />
 
-        <ul className="team__grid">
+        <ul className="team__grid" data-reveal-group>
           {team.map((m) => (
-            <li key={m.id} className="team-card">
+            <li key={m.id} className="team-card" data-reveal-child>
               <div className="team-card__avatar" aria-hidden="true">
                 <span>{m.initials}</span>
               </div>

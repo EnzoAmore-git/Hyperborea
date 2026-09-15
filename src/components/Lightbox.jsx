@@ -1,11 +1,21 @@
 import { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { DURATION, EASING } from '../animations/timing.js';
+import { useFocusTrap } from '../lib/focusTrap.js';
 
 export default function Lightbox({ art, onClose }) {
   const closeRef = useRef(null);
+  const boxRef = useRef(null);
   const prevActive = useRef(null);
   const [zoomed, setZoomed] = useState(false);
+
+  // Фокус-ловушка + inert на navbar/footer (DoD 6.1)
+  useFocusTrap({
+    active: true,
+    rootRef: boxRef,
+    initialFocusRef: closeRef,
+    inertSelectors: ['.navbar', '.site-footer'],
+  });
 
   useEffect(() => {
     prevActive.current = document.activeElement;
@@ -33,6 +43,7 @@ export default function Lightbox({ art, onClose }) {
 
   return (
     <motion.div
+      ref={boxRef}
       className="lightbox"
       role="dialog"
       aria-modal="true"
@@ -44,15 +55,22 @@ export default function Lightbox({ art, onClose }) {
       transition={{ duration: DURATION.medium / 1000, ease: EASING.smooth }}
     >
       <figure className="lightbox__inner">
-        <motion.img
-          className={`lightbox__img${zoomed ? ' is-zoomed' : ''}`}
-          src={art.src}
-          alt={art.caption}
-          initial={{ scale: 0.85, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          exit={{ scale: 0.85, opacity: 0 }}
-          transition={{ duration: DURATION.slow / 1000, ease: EASING.smooth }}
-        />
+        <picture>
+          <source
+            type="image/webp"
+            srcSet={art.srcset}
+            sizes={zoomed ? '94vw' : 'min(92vw, 860px)'}
+          />
+          <motion.img
+            className={`lightbox__img${zoomed ? ' is-zoomed' : ''}`}
+            src={art.src}
+            alt={art.caption}
+            initial={{ scale: 0.85, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0.85, opacity: 0 }}
+            transition={{ duration: DURATION.slow / 1000, ease: EASING.smooth }}
+          />
+        </picture>
 
         <figcaption className="lightbox__caption">
           <span className="lightbox__title">{art.caption}</span>

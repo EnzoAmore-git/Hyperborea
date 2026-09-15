@@ -1,18 +1,18 @@
 /**
  * Данные галереи концептов.
- * ⚠️ ЗАГЛУШКИ: персонажи и подписи проставлены временно (нет данных из артов).
- * Замените `label`/`character`/`caption` под реальных персонажей —
- * фильтрация и карточки работают от этих полей.
+ * Персонажи проставлены по тексту «Легенды о Северном Царстве» (Hyperborea).
+ * ⚠️ Соответствие «арт → персонаж» временное: автору нужно уточнить по
+ * реальным изображениям (модель изображения не видит).
  */
 
 // Пути с префиксом базового пути (локально '/', на GH Pages '/Hyperborea/')
 const asset = (p) => `${import.meta.env.BASE_URL}${p.replace(/^\/+/, '')}`;
 
 export const characters = [
-  { id: 'char-a', label: 'Персонаж 1' },
-  { id: 'char-b', label: 'Персонаж 2' },
-  { id: 'char-c', label: 'Персонаж 3' },
-  { id: 'char-d', label: 'Персонаж 4' },
+  { id: 'char-a', label: 'Святослав' },
+  { id: 'char-b', label: 'Святослав-Богатырь' },
+  { id: 'char-c', label: 'Мутанты' },
+  { id: 'char-d', label: 'Анна Орлова' },
   { id: 'landscape', label: 'Пейзаж' },
 ];
 
@@ -38,10 +38,19 @@ const RAW_GALLERY = [
   { id: '19', src: '/images/art/art-19.png', caption: 'Концепт-арт 19', character: 'char-d' },
 ];
 
-export const gallery = RAW_GALLERY.map((g) => ({
-  ...g,
-  src: asset(g.src),
-}));
+export const gallery = RAW_GALLERY.map((g) => {
+  const stem = g.src.replace(/^\/+/, '').replace(/\.(jpe?g|png)$/i, '');
+  const base = import.meta.env.BASE_URL || '';
+  const deriv = (w) =>
+    `${base}${stem.replace('images/art', 'images/art/webp')}-${w}.webp`;
+  return {
+    ...g,
+    src: asset(g.src),
+    // WebP-производные (Этап 6.2): 400/800/1200 + LQIP 40px
+    srcset: `${deriv(400)} 400w, ${deriv(800)} 800w, ${deriv(1200)} 1200w`,
+    lqip: deriv(40),
+  };
+});
 
 /** Имя персонажа по id (для подписи карточки) */
 export const characterLabel = (id) =>

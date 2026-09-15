@@ -1,7 +1,9 @@
 /**
- * Блок поддержки. ⚠️ Ссылки-заглушки: замените на реальные адреса
- * своих Boosty / Patreon / соцсетей.
+ * Блок поддержки. ⚠️ Boosty / Patreon — ссылки-заглушки: замените на реальные.
+ * Телеграм-канал взят из артбука проекта.
  */
+import SectionTitle from './SectionTitle.jsx';
+
 const PLATFORMS = [
   {
     id: 'boosty',
@@ -20,11 +22,11 @@ const PLATFORMS = [
     icon: '◆',
   },
   {
-    id: 'social',
-    name: 'Соцсети',
-    href: 'https://t.me',
+    id: 'telegram',
+    name: 'Телеграм-канал',
+    href: 'https://t.me/artzavtrakartiomzhukov',
     tone: 'ice',
-    text: 'Новости, наброски и анонсы глав.',
+    text: 'Подписывайтесь: наброски, новости и анонсы глав.',
     icon: '✶',
   },
 ];
@@ -33,14 +35,15 @@ export default function Support() {
   return (
     <section className="section support" id="support">
       <div className="container">
-        <div className="section-title-wrap">
-          <p className="meta">04 — Поддержать</p>
-          <h2 className="section-title">Поддержать проект</h2>
-        </div>
+        <SectionTitle num="04 — Поддержать" title="Поддержать проект" />
 
-        <ul className="support__grid">
+        <ul className="support__grid" data-reveal-group>
           {PLATFORMS.map((p) => (
-            <li key={p.id} className={`support-card support-card--${p.tone}`}>
+            <li
+              key={p.id}
+              className={`support-card support-card--${p.tone}`}
+              data-reveal-child
+            >
               <a
                 className="support-card__link"
                 href={p.href}

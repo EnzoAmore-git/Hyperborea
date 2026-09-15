@@ -77,3 +77,46 @@ section[id] {
     grid-template-columns: repeat(12, minmax(0, 1fr));
   }
 }
+
+/* ---------- 404 (Этап 6.5): «Страница поглощена тьмой» ---------- */
+.not-found {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: 72vh;
+  text-align: center;
+}
+
+.not-found__inner {
+  display: grid;
+  gap: var(--space-4);
+  justify-items: center;
+}
+
+.not-found__runes {
+  letter-spacing: 0.35em;
+  opacity: 0.55;
+}
+
+.not-found__title {
+  font-family: var(--font-display);
+  font-size: clamp(6rem, 16vw, 11rem);
+  line-height: 0.9;
+  background: linear-gradient(180deg, var(--text-primary), var(--text-muted));
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+.not-found__text {
+  max-width: 34rem;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.not-found__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  justify-content: center;
+}
