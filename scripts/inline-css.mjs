@@ -18,7 +18,8 @@ if (!match) {
   process.exit(0);
 }
 const [link, href] = match;
-const cssPath = join(dist, href.replace(/^\//, '').replace(/^\.?\//, ''));
+const cssName = href.slice(href.lastIndexOf('/') + 1);
+const cssPath = join(dist, 'assets', cssName);
 const css = await readFile(cssPath, 'utf8');
 const inlined = html.replace(link, `<style id="critical-inline">${css}</style>`);
 await writeFile(indexHtml, inlined);
