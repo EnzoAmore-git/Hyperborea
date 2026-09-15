@@ -1,0 +1,99 @@
+/* ============================================================
+   Дизайн-токены — единственный источник значений.
+   Источник: docs/design.md (Цветовая палитра, Типографика, Timing, Z-Index).
+   Запрещено использовать «голые» hex/rgba в остальном коде.
+   ============================================================ */
+
+:root {
+  /* ----- Цвета (тёмная тема — единственная) ----- */
+  --bg-void:        #0b0a10;   /* глубинный фон страницы */
+  --bg-deep:        #12101a;   /* фоны карточек, секций */
+  --bg-raised:      #1b1826;   /* карточки, панели поверх фона */
+  --surface:        #221d30;   /* ховеры, инпуты, кнопки */
+  --line-subtle:    #2c2640;   /* тонкие разделители, рамки */
+  --text-primary:   #ece4d8;   /* основной текст — тёплый слоновый */
+  --text-secondary: #9a8f80;   /* вторичный текст, подписи */
+  --text-muted:     #6b6154;   /* приглушённый, для метаданных */
+  --accent-ember:   #c4491c;   /* основной акцент — ржавый/угольный огонь */
+  --accent-gold:    #d8a23a;   /* вторичный акцент — янтарь */
+  --accent-blood:   #8c1f28;   /* терция — кровь (использовать дозированно) */
+  --accent-ice:     #7fa8b8;   /* холодный мистический свет (магия, лёд) */
+
+  /* ----- Opacity-варианты акцентных цветов ----- */
+  --accent-ember-10:   rgba(196, 73, 28, 0.10);
+  --accent-ember-20:   rgba(196, 73, 28, 0.20);
+  --accent-ember-40:   rgba(196, 73, 28, 0.40);
+  --accent-ember-full: #c4491c;
+
+  --accent-gold-10:    rgba(216, 162, 58, 0.10);
+  --accent-gold-20:    rgba(216, 162, 58, 0.20);
+  --accent-gold-40:    rgba(216, 162, 58, 0.40);
+
+  --accent-blood-15:   rgba(140, 31, 40, 0.15);
+  --accent-blood-30:   rgba(140, 31, 40, 0.30);
+
+  --accent-ice-10:     rgba(127, 168, 184, 0.10);
+  --accent-ice-20:     rgba(127, 168, 184, 0.20);
+  --accent-ice-40:     rgba(127, 168, 184, 0.40);
+
+  /* ----- Семейства шрифтов ----- */
+  --font-display: 'Cormorant Garamond', 'Times New Roman', Georgia, serif;
+  --font-body: 'Inter', system-ui, -apple-system, 'Segoe UI', 'Helvetica Neue', sans-serif;
+  --font-mono: 'JetBrains Mono', Consolas, 'Courier New', monospace;
+
+  /* ----- Шкала типов — Fluid Type (clamp) ----- */
+  --fs-display: clamp(2.5rem, 8vw, 5.5rem);  /* hero-заголовки */
+  --fs-h1:      clamp(2rem, 5vw, 3.5rem);    /* заголовки секций */
+  --fs-h2:      clamp(1.5rem, 3.5vw, 2.25rem);
+  --fs-h3:      clamp(1.25rem, 2.5vw, 1.75rem);
+  --fs-body:    1rem;   /* основной текст 16px */
+  --fs-small:   0.875rem;
+  --fs-tiny:    0.75rem;
+  --fs-caption: 0.6875rem;  /* капшены, uppercase с трекингом */
+
+  /* ----- Timing: длительности ----- */
+  --dur-fast:   120ms;
+  --dur-medium: 320ms;
+  --dur-slow:   600ms;
+  --dur-extra:  900ms;
+
+  /* ----- Timing: easing-кривые ----- */
+  --ease-smooth:   cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-bounce:   cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-standard: cubic-bezier(0.25, 0.8, 0.25, 1);
+  --ease-enter:    cubic-bezier(0.11, 0, 0.5, 0);
+
+  /* ----- Z-Index Hierarchy ----- */
+  --z-base:        0;
+  --z-content:     10;
+  --z-navbar:      100;
+  --z-menu:        200;
+  --z-reader-bar:  300;
+  --z-tooltip:     400;
+  --z-lightbox:    500;
+  --z-modal:       600;
+  --z-reader:      700;
+  --z-toast:       800;
+
+  /* ----- Промежутки (кратны 8px) ----- */
+  --space-1: 0.5rem;   /* 8px  */
+  --space-2: 1rem;     /* 16px */
+  --space-3: 1.5rem;   /* 24px */
+  --space-4: 2rem;     /* 32px */
+  --space-6: 3rem;     /* 48px */
+  --space-8: 4rem;     /* 64px */
+  --section-pad: clamp(4rem, 10vw, 8rem);  /* отступы секций сверху/снизу */
+
+  /* ----- Скругления ----- */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-full: 999px;
+
+  /* ----- Layout ----- */
+  --container: 1280px;
+  --container-wide: 1600px;
+  --gutter-mobile: 16px;
+  --gutter-tablet: 24px;
+  --gutter-desktop: 32px;
+}

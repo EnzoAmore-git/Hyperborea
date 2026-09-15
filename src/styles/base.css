@@ -1,0 +1,178 @@
+/* ============================================================
+   База: сброс, типографика, фокус, утилиты.
+   Полагается ТОЛЬКО на токены из tokens.css.
+   ============================================================ */
+
+:root {
+  color-scheme: dark;
+  scrollbar-color: var(--line-subtle) var(--bg-deep);
+  scrollbar-width: thin;
+}
+
+/* Рекомендованный CSS для Lenis (классы добавляет сам Lenis на <html>) */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-smooth iframe {
+  pointer-events: none;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+}
+
+html {
+  scroll-behavior: auto;
+  background: var(--bg-void);
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  min-height: 100vh;
+  background: var(--bg-void);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: var(--fs-body);
+  font-weight: 400;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-wrap: break-word;
+}
+
+/* ----- Типографика по токенам (читаемый голый HTML) ----- */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  line-height: 1.15;
+  color: var(--text-primary);
+  letter-spacing: 0.02em;
+  text-wrap: balance;
+}
+
+h1 { font-size: var(--fs-h1); }
+h2 { font-size: var(--fs-h2); }
+h3 { font-size: var(--fs-h3); }
+
+p {
+  max-width: 65ch;
+}
+
+small,
+.meta {
+  font-family: var(--font-mono);
+  font-size: var(--fs-caption);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+a {
+  color: inherit;
+  text-decoration-color: var(--accent-gold-40);
+  text-underline-offset: 3px;
+  transition: text-decoration-color var(--dur-fast) var(--ease-standard);
+}
+
+a:hover {
+  text-decoration-color: var(--accent-gold);
+}
+
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+img {
+  height: auto;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+ul,
+ol {
+  padding-left: 1.5rem;
+}
+
+/* ----- Фокус виден при навигации с клавиатуры ----- */
+:focus {
+  outline: none;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent-gold);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+::selection {
+  background: var(--accent-gold-20);
+  color: var(--text-primary);
+}
+
+/* ----- Заголовок секции: uppercase + янтарная линия ----- */
+.section-title {
+  font-size: var(--fs-h1);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  text-align: center;
+  padding-bottom: var(--space-3);
+  border-bottom: 1px solid var(--line-subtle);
+  margin-bottom: var(--space-6);
+}
+
+.section-title::before {
+  content: '';
+  display: block;
+  width: 64px;
+  height: 3px;
+  margin: 0 auto var(--space-3);
+  background: var(--accent-gold);
+  border-radius: var(--radius-full);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

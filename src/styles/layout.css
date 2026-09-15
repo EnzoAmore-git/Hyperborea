@@ -1,0 +1,79 @@
+/* ============================================================
+   Layout-сетка и брейкпоинты (mobile-first, только min-width).
+   Мобайл  (<768px)     : 4 колонки · гуттер 16px · контент 100%
+   Планшет (≥768px)     : 8 колонок · гуттер 24px
+   Десктоп (≥1024px)    : 12 колонок · гуттер 32px · контейнер 1280px
+   Расстояния между блоками кратны 8px (--space-*).
+   ============================================================ */
+
+.container {
+  width: 100%;
+  max-width: var(--container);
+  margin-inline: auto;
+  padding-inline: var(--gutter-mobile);
+}
+
+.container--wide {
+  max-width: var(--container-wide);
+}
+
+/* Секция, выходящая на края экрана (full-bleed): фон на всю ширину,
+   контент внутри — через вложенный .container */
+.full-bleed {
+  width: 100vw;
+  margin-inline: calc(50% - 50vw);
+}
+
+/* Вертикальный ритм секций — clamp(4rem, 10vw, 8rem) */
+.section {
+  padding-block: var(--section-pad);
+}
+
+/* Базовая сетка: колонки переключаются по брейкпоинтам.
+   Используется как каркас секций; вложенные сетки компонентов
+   задаются в самих компонентах поверх этой. */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--space-3);
+}
+
+.grid > .span-all {
+  grid-column: 1 / -1;
+}
+
+/* Утилиты отступов (кратны 8px) */
+.mt-1 { margin-top: var(--space-1); }
+.mt-2 { margin-top: var(--space-2); }
+.mt-3 { margin-top: var(--space-3); }
+.mt-4 { margin-top: var(--space-4); }
+.mb-1 { margin-bottom: var(--space-1); }
+.mb-2 { margin-bottom: var(--space-2); }
+.mb-3 { margin-bottom: var(--space-3); }
+.mb-4 { margin-bottom: var(--space-4); }
+
+/* Якоря секций не прячутся под фиксированный navbar */
+section[id] {
+  scroll-margin-top: 88px;
+}
+
+@media (min-width: 768px) {
+  .container {
+    padding-inline: var(--gutter-tablet);
+  }
+
+  .grid {
+    grid-template-columns: repeat(8, minmax(0, 1fr));
+    gap: var(--space-4);
+  }
+}
+
+@media (min-width: 1024px) {
+  .container {
+    padding-inline: var(--gutter-desktop);
+  }
+
+  .grid {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+  }
+}

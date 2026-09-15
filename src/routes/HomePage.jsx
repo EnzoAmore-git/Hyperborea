@@ -1,8 +1,17 @@
+import Hero from '../components/Hero.jsx';
+import About from '../components/About.jsx';
+import Gallery from '../components/Gallery.jsx';
+import Team from '../components/Team.jsx';
+import Support from '../components/Support.jsx';
+
 export default function HomePage() {
   return (
-    <main>
-      <h1>Главная страница</h1>
-      <p>Секции Hero, О проекте, Галерея, Команда, Поддержка — будут добавлены в Этапе 3.</p>
-    </main>
+    <>
+      <Hero />
+      <About />
+      <Gallery />
+      <Team />
+      <Support />
+    </>
   );
 }

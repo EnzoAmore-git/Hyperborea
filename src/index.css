@@ -1,31 +1,10 @@
-/* Точка входа для стилей. Система токенов им планируется в Этапе 1
- * (src/styles/tokens.css, base.css и т.д.), здесь — минимальные глобальные стили. */
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
+/* ============================================================
+   Точка входа стилей. Порядок подключения важен:
+   tokens → fonts → base → components → layout → effects (Этап 5)
+   ============================================================ */
 
-html {
-  scroll-behavior: auto;
-}
-
-body {
-  margin: 0;
-  min-height: 100vh;
-  background: var(--bg-void, #0b0a10);
-  color: var(--text-primary, #ece4d8);
-  font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
-  line-height: 1.6;
-  -webkit-font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
-}
-
-img {
-  max-width: 100%;
-  display: block;
-}
-
-a {
-  color: inherit;
-}
+@import './styles/tokens.css';
+@import './styles/fonts.css';
+@import './styles/base.css';
+@import './styles/components.css';
+@import './styles/layout.css';
