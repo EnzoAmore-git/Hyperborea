@@ -659,6 +659,13 @@ input[type='radio'] {
   gap: var(--space-3);
 }
 
+.gallery__count {
+  margin: 0 0 var(--space-1);
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
 /* Фильтр: чипы на мобильном, вертикальный список на десктопе */
 .g-filter__list {
   display: flex;

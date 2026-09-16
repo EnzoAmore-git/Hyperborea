@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { DURATION, EASING } from '../animations/timing.js';
 import { useFocusTrap } from '../lib/focusTrap.js';
+import { characterLabel } from '../data/gallery.js';
 
 export default function Lightbox({ art, onClose }) {
   const closeRef = useRef(null);
@@ -56,11 +57,13 @@ export default function Lightbox({ art, onClose }) {
     >
       <figure className="lightbox__inner">
         <picture>
-          <source
-            type="image/webp"
-            srcSet={art.srcset}
-            sizes={zoomed ? '94vw' : 'min(92vw, 860px)'}
-          />
+          {art.srcset && (
+            <source
+              type="image/webp"
+              srcSet={art.srcset}
+              sizes={zoomed ? '94vw' : 'min(92vw, 860px)'}
+            />
+          )}
           <motion.img
             className={`lightbox__img${zoomed ? ' is-zoomed' : ''}`}
             src={art.src}
@@ -74,7 +77,7 @@ export default function Lightbox({ art, onClose }) {
 
         <figcaption className="lightbox__caption">
           <span className="lightbox__title">{art.caption}</span>
-          <span className="meta">{art.character}</span>
+          <span className="meta">{characterLabel(art.character)}</span>
         </figcaption>
 
         <div className="lightbox__controls">

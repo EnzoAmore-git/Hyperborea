@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { AnimatePresence } from 'framer-motion';
-import { characters, filterByCharacter } from '../data/gallery.js';
+import { AnimatePresence, MotionConfig } from 'framer-motion';
+import { characters, filterByCharacter, characterLabel } from '../data/gallery.js';
 import SectionTitle from './SectionTitle.jsx';
 import GalleryFilter from './GalleryFilter.jsx';
 import ArtCard from './ArtCard.jsx';
@@ -27,12 +27,20 @@ export default function Gallery() {
           />
         </aside>
 
-        <div className="gallery__grid">
-          <AnimatePresence mode="popLayout" initial={false}>
-            {items.map((art) => (
-              <ArtCard key={art.id} art={art} onOpen={setSelected} />
-            ))}
-          </AnimatePresence>
+        <div className="gallery__grid-wrap">
+          <p className="gallery__count meta" aria-live="polite">
+            {characterLabel(activeChar)} · {items.length}
+          </p>
+
+          <MotionConfig reducedMotion="user">
+            <div className="gallery__grid">
+              <AnimatePresence mode="popLayout" initial={false}>
+                {items.map((art, i) => (
+                  <ArtCard key={art.id} art={art} index={i} onOpen={setSelected} />
+                ))}
+              </AnimatePresence>
+            </div>
+          </MotionConfig>
         </div>
       </div>
 
