@@ -39,7 +39,7 @@
   width: 72px;
   height: 2px;
   margin-top: var(--space-3);
-  background: linear-gradient(90deg, var(--accent-gold-40), transparent);
+  background: linear-gradient(90deg, var(--accent-blood-40), transparent);
   transform: scaleX(0);
   transform-origin: left;
   will-change: transform;
@@ -54,12 +54,12 @@
       box-shadow var(--dur-slow) var(--ease-smooth);
   }
 
-  .support-card--ember:hover { box-shadow: 0 0 0 1px var(--accent-ember-40), 0 0 34px var(--accent-ember-20), 0 24px 64px rgba(0, 0, 0, 0.5); }
-  .support-card--gold:hover  { box-shadow: 0 0 0 1px var(--accent-gold-40),  0 0 34px var(--accent-gold-20),  0 24px 64px rgba(0, 0, 0, 0.5); }
+  .support-card--ember:hover { box-shadow: 0 0 0 1px var(--accent-gold-40), 0 0 34px var(--accent-gold-20), 0 24px 64px rgba(0, 0, 0, 0.5); }
+  .support-card--gold:hover  { box-shadow: 0 0 0 1px var(--accent-blood-40),  0 0 34px var(--accent-blood-20),  0 24px 64px rgba(0, 0, 0, 0.5); }
   .support-card--ice:hover   { box-shadow: 0 0 0 1px var(--accent-ice-40),   0 0 34px var(--accent-ice-20),   0 24px 64px rgba(0, 0, 0, 0.5); }
 
   .team-card:hover { box-shadow: 0 0 26px var(--accent-ice-20); }
-  .art-card:hover { box-shadow: 0 14px 36px var(--accent-gold-10), 0 0 26px var(--accent-gold-10); }
+  .art-card:hover { box-shadow: 0 14px 36px var(--accent-blood-10), 0 0 26px var(--accent-blood-10); }
 }
 
 /* Редукция движения: элементы видимы сразу, дрейф зерна отключён */
@@ -71,5 +71,301 @@
 
   .fx-noise {
     animation: none;
+  }
+}
+
+/* ============================================================
+   Славянский орнамент и украшения (Этап 8).
+   Только CSS + inline SVG data-URI — без внешних запросов к декору.
+   Аналогичные файлы лежат в public/assets/ornaments|textures
+   (rune-divider / corner-rune / frame-border /
+   ice-ring / sun-wheel / Slavik_pattern / noise-overlay).
+   ============================================================ */
+
+/* ----- Общие орнамент-утилиты (.slavic-*) ----- */
+
+.slavic-divider {
+  display: block;
+  width: 90px;
+  height: 28px;
+  margin: var(--space-4) auto;
+  background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 90 28'><line x1='2' y1='14' x2='30' y2='14' stroke='%238C1F28' stroke-width='1.5' stroke-linecap='round'/><path d='M34 5 L40 2 L46 5 L46 23 L40 26 L34 23 Z' fill='none' stroke='%238C1F28' stroke-width='1.5' stroke-linejoin='round'/><line x1='50' y1='14' x2='88' y2='14' stroke='%238C1F28' stroke-width='1.5' stroke-linecap='round'/></svg>") center / contain no-repeat;
+  opacity: 0.85;
+}
+
+.slavic-sun {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 800'><g fill='none' stroke='%238C1F28' stroke-linecap='round' stroke-linejoin='round'><circle cx='400' cy='400' r='392' stroke-width='2'/><circle cx='400' cy='400' r='336' stroke-width='2' stroke-dasharray='3 27'/><circle cx='400' cy='400' r='150' stroke-width='8'/><circle cx='400' cy='400' r='118' stroke-width='2'/><path d='M400 22 V280 M400 520 V778 M22 400 H280 M520 400 H778' stroke-width='6'/><path d='M133 133 L303 303 M497 497 L667 667 M667 133 L497 303 M303 497 L133 667' stroke-width='6'/></g><g fill='%238C1F28'><circle cx='400' cy='20' r='6'/><circle cx='400' cy='780' r='6'/><circle cx='20' cy='400' r='6'/><circle cx='780' cy='400' r='6'/><circle cx='131' cy='131' r='6'/><circle cx='669' cy='669' r='6'/><circle cx='669' cy='131' r='6'/><circle cx='131' cy='669' r='6'/></g></svg>");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+}
+
+/* Slavik_pattern — один узор во всю ширину центрального контейнера,
+   вертикально по всей странице; ресайзится вместе с контейнером.
+   Opacity 0.05 зашита в сам SVG. */
+.home-blocks {
+  background-image: url("/assets/ornaments/Slavik_pattern.svg");
+  background-repeat: repeat-y;
+  background-position: center top;
+  background-size: min(100%, var(--container)) auto;
+}
+
+/* ----- 1. Фон hero: солнце-колесо + медленное вращение ----- */
+.hero::before {
+  content: '';
+  position: absolute;
+  top: calc(38% - min(430px, 46vw) + 72px);
+  left: 50%;
+  width: min(860px, 92vw);
+  aspect-ratio: 1 / 1;
+  transform: translateX(-50%);
+  z-index: 1;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 800'><g fill='none' stroke='%238C1F28' stroke-linecap='round' stroke-linejoin='round'><circle cx='400' cy='400' r='392' stroke-width='2'/><circle cx='400' cy='400' r='336' stroke-width='2' stroke-dasharray='3 27'/><circle cx='400' cy='400' r='150' stroke-width='8'/><circle cx='400' cy='400' r='118' stroke-width='2'/><path d='M400 22 V280 M400 520 V778 M22 400 H280 M520 400 H778' stroke-width='6'/><path d='M133 133 L303 303 M497 497 L667 667 M667 133 L497 303 M303 497 L133 667' stroke-width='6'/></g><g fill='%238C1F28'><circle cx='400' cy='20' r='6'/><circle cx='400' cy='780' r='6'/><circle cx='20' cy='400' r='6'/><circle cx='780' cy='400' r='6'/><circle cx='131' cy='131' r='6'/><circle cx='669' cy='669' r='6'/><circle cx='669' cy='131' r='6'/><circle cx='131' cy='669' r='6'/></g></svg>");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 100% 100%;
+  opacity: 0.05;
+  will-change: transform;
+  animation: slavic-spin-hero 180s linear infinite;
+}
+
+.hero__title,
+.navbar__logo {
+  font-family: 'Sagrada Libre', 'Cormorant Garamond', 'Times New Roman', Georgia, serif;
+  letter-spacing: 0.12em;
+  font-weight: 700;
+}
+
+.navbar__logo {
+  letter-spacing: 0.08em;
+}
+
+@keyframes slavic-spin-hero {
+  from {
+    transform: translateX(-50%) rotate(0deg);
+  }
+  to {
+    transform: translateX(-50%) rotate(360deg);
+  }
+}
+
+@keyframes slavic-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ----- 2. Navbar: янтарная акцент-линия снизу ----- */
+.navbar::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--accent-blood-20) 30%,
+    var(--accent-blood) 50%,
+    var(--accent-blood-20) 70%,
+    transparent 100%
+  );
+  opacity: 0.45;
+  pointer-events: none;
+  transition: opacity var(--dur-medium) var(--ease-smooth);
+}
+
+.navbar:hover::after {
+  opacity: 1;
+}
+
+.navbar__rune {
+  filter: drop-shadow(0 0 8px var(--accent-blood-40));
+}
+
+/* ----- 3. Кнопки: эмбер-градиент + золотая окантовка + рунный знак ----- */
+.btn--primary {
+  border-color: var(--accent-blood);
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--text-primary) 10%, var(--accent-blood)) 0%,
+    var(--accent-blood) 58%,
+    color-mix(in srgb, var(--bg-void) 12%, var(--accent-blood)) 100%
+  );
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, var(--text-primary) 22%, transparent),
+    0 2px 12px var(--accent-blood-20);
+}
+
+.btn--primary::before {
+  content: '';
+  flex: none;
+  width: 1em;
+  height: 1em;
+  background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><g fill='none' stroke='%23ECE4D8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M12 2 V22 M2 12 H22 M4.55 4.55 L19.45 19.45 M19.45 4.55 L4.55 19.45'/></g></svg>") center / contain no-repeat;
+  opacity: 0.9;
+}
+
+.btn--primary:hover {
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, var(--text-primary) 26%, transparent),
+    0 0 0 1px var(--accent-blood-40),
+    0 0 26px var(--accent-blood-40),
+    0 8px 28px var(--accent-blood-20);
+}
+
+/* Вторичная: золотая окантовка → эмбер-заливка на hover */
+.btn--ghost {
+  border-color: var(--accent-blood-40);
+  color: var(--text-secondary);
+}
+
+.btn--ghost:hover {
+  border-color: var(--accent-blood);
+  color: var(--text-primary);
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--text-primary) 6%, var(--accent-blood)) 0%,
+    var(--accent-blood) 100%
+  );
+  box-shadow: 0 0 22px var(--accent-blood-20);
+}
+
+/* ----- 4. Карточки арта: золотое свечение + руны по углам + рамка-бордюр ----- */
+.art-card__caption {
+  z-index: 2;
+}
+
+.art-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background-image:
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 60'><g fill='none' stroke='%238C1F28' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'><path d='M2 8 L2 2 L8 2'/><path d='M52 2 L58 2 L58 8'/><path d='M2 52 L2 58 L8 58'/><path d='M52 58 L58 58 L58 52'/></g><g fill='none' stroke='%238C1F28' stroke-width='1' stroke-dasharray='3 3'><line x1='12' y1='2' x2='48' y2='2'/><line x1='12' y1='58' x2='48' y2='58'/><line x1='2' y1='12' x2='2' y2='48'/><line x1='58' y1='12' x2='58' y2='48'/></g></svg>"),
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><g fill='none' stroke='%238C1F28' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M12 2 V22 M2 12 H22 M4.55 4.55 L19.45 19.45 M19.45 4.55 L4.55 19.45'/></g></svg>"),
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><g fill='none' stroke='%238C1F28' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M12 2 V22 M2 12 H22 M4.55 4.55 L19.45 19.45 M19.45 4.55 L4.55 19.45'/></g></svg>"),
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><g fill='none' stroke='%238C1F28' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M12 2 V22 M2 12 H22 M4.55 4.55 L19.45 19.45 M19.45 4.55 L4.55 19.45'/></g></svg>"),
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><g fill='none' stroke='%238C1F28' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M12 2 V22 M2 12 H22 M4.55 4.55 L19.45 19.45 M19.45 4.55 L4.55 19.45'/></g></svg>");
+  background-position:
+    center,
+    top 8px left 8px,
+    top 8px right 8px,
+    bottom 8px left 8px,
+    bottom 8px right 8px;
+  background-size:
+    100% 100%,
+    18px 18px,
+    18px 18px,
+    18px 18px,
+    18px 18px;
+  background-repeat: no-repeat;
+  opacity: 0;
+  transition: opacity var(--dur-medium) var(--ease-smooth);
+}
+
+.art-card:hover::after {
+  opacity: 1;
+}
+
+@media (hover: hover) {
+  .art-card:hover {
+    box-shadow:
+      0 0 0 1px var(--accent-blood-40),
+      0 0 28px var(--accent-blood-20),
+      0 14px 36px rgba(0, 0, 0, 0.5);
+  }
+}
+
+/* ----- 5. Команда: ледяное кольцо с рунами на hover ----- */
+.team-card__avatar {
+  position: relative;
+}
+
+.team-card__avatar::after {
+  content: '';
+  position: absolute;
+  inset: -10px;
+  border-radius: 50%;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'><circle cx='40' cy='40' r='32' fill='none' stroke='%237FA8B8' stroke-width='1.5' opacity='0.6'/><circle cx='40' cy='40' r='26' fill='none' stroke='%237FA8B8' stroke-width='1' opacity='0.4'/><path d='M36 10 L40 6 L44 10 M36 70 L40 74 L44 70 M10 36 L6 40 L10 44 M70 36 L74 40 L70 44' fill='none' stroke='%237FA8B8' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/><circle cx='40' cy='40' r='2' fill='%237FA8B8' opacity='0.3'/></svg>");
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  background-position: center;
+  filter: drop-shadow(0 0 6px color-mix(in srgb, var(--accent-ice) 45%, transparent));
+  opacity: 0;
+  transform: scale(0.82);
+  transition:
+    opacity var(--dur-medium) var(--ease-smooth),
+    transform var(--dur-medium) var(--ease-bounce);
+}
+
+.team-card:hover .team-card__avatar::after {
+  opacity: 1;
+  transform: scale(1.05);
+}
+
+.team-card:hover .team-card__avatar {
+  border-color: var(--accent-ice);
+}
+
+/* ----- 6. Плетёнка убрана: секции и карточки без фонового узора ----- */
+
+/* ----- 7. Live-линия заголовков: разделитель от края до края контейнера ----- */
+.section-line {
+  display: block;
+  width: 100%;
+  height: clamp(12px, 2.2vw, 24px);
+  margin-top: var(--space-3);
+  background-image: url("data:image/svg+xml,%3Csvg%20width=%22160%22%20height=%2296%22%20viewBox=%220%200%20160%2096%22%20fill=%22none%22%20xmlns=%22http://www.w3.org/2000/svg%22%3E%20%3Cg%20clip-path=%22url(%23clip0_337_105)%22%3E%20%3Cpath%20d=%22M0%208H800%22%20stroke=%22%238C1F28%22%20stroke-width=%224%22/%3E%20%3Cpath%20d=%22M0%2088H800%22%20stroke=%22%238C1F28%22%20stroke-width=%224%22/%3E%20%3Cpath%20d=%22M80%2016L112%2048L80%2080L48%2048L80%2016Z%22%20stroke=%22%238C1F28%22%20stroke-width=%224.8%22/%3E%20%3Cpath%20d=%22M0%2054C3.31371%2054%206%2051.3137%206%2048C6%2044.6863%203.31371%2042%200%2042C-3.31371%2042%20-6%2044.6863%20-6%2048C-6%2051.3137%20-3.31371%2054%200%2054Z%22%20fill=%22%238C1F28%22/%3E%20%3Cpath%20d=%22M160%2054C163.314%2054%20166%2051.3137%20166%2048C166%2044.6863%20163.314%2042%20160%2042C156.686%2042%20154%2044.6863%20154%2048C154%2051.3137%20156.686%2054%20160%2054Z%22%20fill=%22%238C1F28%22/%3E%20%3C/g%3E%20%3Cdefs%3E%20%3CclipPath%20id=%22clip0_337_105%22%3E%20%3Crect%20width=%22160%22%20height=%2296%22%20fill=%22white%22/%3E%20%3C/clipPath%3E%20%3C/defs%3E%20%3C/svg%3E");
+  background-repeat: repeat-x;
+  background-size: auto 100%;
+  opacity: 0.9;
+  transform-origin: center;
+  transform: scaleX(0);
+}
+
+/* ----- 9. Зерно поверх всего: возрастная бумага (усиление G) ----- */
+.fx-noise {
+  z-index: var(--z-toast);
+  mix-blend-mode: overlay;
+  opacity: 0.06;
+}
+
+/* ----- 10. 404: лава-градиент + золотое «404» ----- */
+.not-found {
+  background-image:
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 60'><g fill='none' stroke='%238C1F28' stroke-opacity='0.05'><path d='M30 4 L56 30 L30 56 L4 30 Z' stroke-width='1.4'/><path d='M30 14 V46 M14 30 H46' stroke-width='1'/><path d='M2 2 L8 2 L8 8 M58 2 L58 8 L52 8 M2 58 L2 52 L8 52 M58 58 L52 58 L52 52' stroke-width='1'/></g><circle cx='30' cy='30' r='2.4' fill='%238C1F28' fill-opacity='0.05'/></svg>"),
+    radial-gradient(900px 520px at 50% 112%, color-mix(in srgb, var(--accent-blood) 24%, transparent), transparent 62%),
+    radial-gradient(720px 460px at 50% -6%, color-mix(in srgb, var(--accent-gold) 18%, transparent), transparent 60%);
+  background-size: 60px 60px, cover, cover;
+  background-position: 0 0, 0 0, 0 0;
+  background-color: var(--bg-void);
+  background-repeat: repeat, no-repeat, no-repeat;
+}
+
+.not-found__title {
+  background: linear-gradient(
+    180deg,
+    var(--accent-blood) 0%,
+    color-mix(in srgb, var(--accent-blood) 50%, var(--accent-gold)) 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 6px 18px var(--accent-blood-20));
+}
+
+/* ----- Redukция движения для орнамента ----- */
+@media (prefers-reduced-motion: reduce) {
+  .hero::before {
+    animation: none;
+  }
+
+  .section-line {
+    transform: scaleX(1);
   }
 }

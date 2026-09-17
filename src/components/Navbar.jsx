@@ -129,9 +129,9 @@ export default function Navbar() {
   return (
     <header className="navbar" ref={navRef}>
       <nav className="navbar__inner container" aria-label="Основная навигация">
-        <Link to="/" className="navbar__logo" aria-label="Hyperborea — на главную">
+        <Link to="/" className="navbar__logo" aria-label="Гиперборея — на главную">
           <RuneLogo />
-          <span>Hyperborea</span>
+          <span>Гиперборея</span>
         </Link>
 
         <ul className="navbar__links">

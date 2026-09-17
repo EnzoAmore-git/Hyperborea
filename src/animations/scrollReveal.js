@@ -56,13 +56,13 @@ export async function initScrollReveal(root = document) {
       if (!children.length) return;
       gsap.fromTo(
         children,
-        { autoAlpha: 0, y: 48 },
+        { autoAlpha: 0, y: 60 },
         {
           autoAlpha: 1,
           y: 0,
           duration: childDur,
           ease: EASING.smooth,
-          stagger: 0.12,
+          stagger: 0.08,
           scrollTrigger: { trigger: group, start: 'top 85%', once: true },
         },
       );

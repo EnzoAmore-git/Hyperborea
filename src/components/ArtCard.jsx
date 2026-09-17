@@ -4,30 +4,19 @@ import { DURATION, EASING } from '../animations/timing.js';
 
 /**
  * Карточка арта.
- * Переход при смене персонажа в Gallery: прежний набор быстро «сворачивается»
- * (exit: fade+scale, --dur-fast), новый разворачивается каскадом по index
- * (fade+rise с нарастающей задержкой, без scale — scale с 30-ю карточками
- * одновременно выглядел дёргано).
+ * При смене персонажа — мягкий каскад: лёгкий y+opacity, short stagger.
+ * Без `layout` (инерция layout-анимаций с двумя десятками карточек даёт «дёрганность»).
  */
 export default function ArtCard({ art, onOpen, index = 0 }) {
-  const stagger = Math.min(index, 10) * 0.045;
+  const stagger = Math.min(index, 8) * 0.055;
 
   return (
     <motion.figure
       className="art-card"
-      layout
-      initial={{ opacity: 0, y: 28 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{
-        opacity: 0,
-        scale: 0.94,
-        transition: { duration: DURATION.fast / 1000, ease: EASING.enter },
-      }}
-      transition={{
-        duration: DURATION.medium / 1000,
-        ease: EASING.smooth,
-        delay: stagger,
-      }}
+      initial={{ opacity: 0, y: 26, scale: 0.96 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      exit={{ opacity: 0, transition: { duration: DURATION.fast / 1000, ease: EASING.enter } }}
+      transition={{ duration: DURATION.slow / 1000, ease: EASING.smooth, delay: stagger }}
       style={
         art.lqip
           ? {

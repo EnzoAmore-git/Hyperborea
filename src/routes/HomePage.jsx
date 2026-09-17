@@ -24,7 +24,7 @@ export default function HomePage() {
   }, []);
 
   return (
-    <>
+    <div className="home-blocks">
       <Hero />
       <About />
       <ErrorBoundary label="Галерея не загрузилась">
@@ -32,6 +32,6 @@ export default function HomePage() {
       </ErrorBoundary>
       <Team />
       <Support />
-    </>
+    </div>
   );
 }

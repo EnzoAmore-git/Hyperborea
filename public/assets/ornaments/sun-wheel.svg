@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800" width="800" height="800">
+  <!-- Большое солнце-колесо (коловрат-геометрия) для фона hero, очень низкая непрозрачность -->
+  <g fill="none" stroke="#D8A23A" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="400" cy="400" r="392" stroke-width="2"/>
+    <circle cx="400" cy="400" r="336" stroke-width="2" stroke-dasharray="3 27"/>
+    <circle cx="400" cy="400" r="150" stroke-width="8"/>
+    <circle cx="400" cy="400" r="118" stroke-width="2"/>
+    <path d="M400 22 V280 M400 520 V778 M22 400 H280 M520 400 H778" stroke-width="6"/>
+    <path d="M133 133 L303 303 M497 497 L667 667 M667 133 L497 303 M303 497 L133 667" stroke-width="6"/>
+  </g>
+  <g fill="#D8A23A">
+    <circle cx="400" cy="20" r="6"/>
+    <circle cx="400" cy="780" r="6"/>
+    <circle cx="20" cy="400" r="6"/>
+    <circle cx="780" cy="400" r="6"/>
+    <circle cx="131" cy="131" r="6"/>
+    <circle cx="669" cy="669" r="6"/>
+    <circle cx="669" cy="131" r="6"/>
+    <circle cx="131" cy="669" r="6"/>
+  </g>
+</svg>

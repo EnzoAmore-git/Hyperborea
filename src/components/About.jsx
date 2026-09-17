@@ -11,7 +11,7 @@ export default function About() {
         <div className="about__grid" data-reveal>
           <div className="about__text">
             <p>
-              <strong>Hyperborea</strong> — «Легенда о Северном Царстве»:
+              <strong>Гиперборея</strong> — «Легенда о Северном Царстве»:
               славянское тёмное фэнтези в декорациях недалёкого будущего.
               Корпорации заменили государства, «безопасники» — полицию,
               а ночные улицы всё чаще принадлежат волчьим тварям.
@@ -42,7 +42,7 @@ export default function About() {
               />
               <img
                 src={asset('/images/art/art-09.jpg')}
-                alt="Концепт-арт мира Hyperborea"
+                alt="Концепт-арт мира Гиперборея"
                 loading="lazy"
                 decoding="async"
               />

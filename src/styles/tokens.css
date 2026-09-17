@@ -29,8 +29,12 @@
   --accent-gold-20:    rgba(216, 162, 58, 0.20);
   --accent-gold-40:    rgba(216, 162, 58, 0.40);
 
+  --accent-blood-06:   rgba(140, 31, 40, 0.06);
+  --accent-blood-10:   rgba(140, 31, 40, 0.10);
   --accent-blood-15:   rgba(140, 31, 40, 0.15);
+  --accent-blood-20:   rgba(140, 31, 40, 0.20);
   --accent-blood-30:   rgba(140, 31, 40, 0.30);
+  --accent-blood-40:   rgba(140, 31, 40, 0.40);
 
   --accent-ice-10:     rgba(127, 168, 184, 0.10);
   --accent-ice-20:     rgba(127, 168, 184, 0.20);

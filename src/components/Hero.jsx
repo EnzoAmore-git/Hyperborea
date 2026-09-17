@@ -107,7 +107,7 @@ export default function Hero() {
           Легенда о Северном Царстве · Веб-комикс · 18+
         </motion.p>
         <motion.h1 className="hero__title" {...riseLite(0.2)}>
-          Hyperborea
+          Гиперборея
         </motion.h1>
         <motion.p className="hero__lead" {...fadeUp(0.32)}>
           Недалёкое будущее: корпорации правят городами, а ночные улицы

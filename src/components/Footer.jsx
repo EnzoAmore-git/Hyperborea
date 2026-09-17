@@ -15,7 +15,7 @@ export default function Footer() {
           <span className="site-footer__rune" aria-hidden="true">
             ◈
           </span>
-          <span className="meta">Hyperborea</span>
+          <span className="meta">Гиперборея</span>
         </div>
 
         <nav className="site-footer__links" aria-label="Навигация в футере">
@@ -27,7 +27,7 @@ export default function Footer() {
         </nav>
 
         <p className="site-footer__copy meta">
-          © {year} Hyperborea · Все права защищены
+          © {year} Гиперборея · Все права защищены
         </p>
 
         <div className="age-disclaimer">

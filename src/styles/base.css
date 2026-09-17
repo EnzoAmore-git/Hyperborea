@@ -94,13 +94,13 @@ small,
 
 a {
   color: inherit;
-  text-decoration-color: var(--accent-gold-40);
+  text-decoration-color: var(--accent-blood-40);
   text-underline-offset: 3px;
   transition: text-decoration-color var(--dur-fast) var(--ease-standard);
 }
 
 a:hover {
-  text-decoration-color: var(--accent-gold);
+  text-decoration-color: var(--accent-blood);
 }
 
 img,
@@ -135,13 +135,13 @@ ol {
 }
 
 :focus-visible {
-  outline: 2px solid var(--accent-gold);
+  outline: 2px solid var(--accent-blood);
   outline-offset: 2px;
   border-radius: var(--radius-sm);
 }
 
 ::selection {
-  background: var(--accent-gold-20);
+  background: var(--accent-blood-20);
   color: var(--text-primary);
 }
 
@@ -151,9 +151,8 @@ ol {
   text-transform: uppercase;
   letter-spacing: 0.12em;
   text-align: center;
-  padding-bottom: var(--space-3);
-  border-bottom: 1px solid var(--line-subtle);
-  margin-bottom: var(--space-6);
+  padding-bottom: 0;
+  margin-bottom: var(--space-3);
 }
 
 .section-title::before {
@@ -162,7 +161,7 @@ ol {
   width: 64px;
   height: 3px;
   margin: 0 auto var(--space-3);
-  background: var(--accent-gold);
+  background: var(--accent-blood);
   border-radius: var(--radius-full);
 }
 
