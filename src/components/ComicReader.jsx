@@ -213,7 +213,8 @@ export default function ComicReader() {
     pendingScrollRef.current = null;
     cancelRewind();
     if (scrollRef.current) scrollRef.current.scrollTop = 0;
-    scrollToPage(p, 'auto');
+    // стр. 1 остаётся на заголовке главы, дальше — точный скролл к странице
+    if (p > 1) scrollToPage(p, 'auto');
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [navTick]);
 
@@ -466,6 +467,14 @@ export default function ComicReader() {
             Главы {ch && <span className="reader__meta-inline">({chapterIdx}/{chapters.length})</span>}
           </button>
         </header>
+
+        {/* заголовок главы в начале ленты */}
+        {ch && (
+          <div className="reader__chapter-head">
+            <span className="reader__chapter-number">{ch.title}</span>
+            <h2 className="reader__chapter-title">{ch.subtitle}</h2>
+          </div>
+        )}
 
         {ch?.pages.map((pg, i) =>
           pg.type === 'text' ? (
