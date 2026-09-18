@@ -513,20 +513,28 @@ input[type='radio'] {
   }
 
   .site-footer__inner {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
     align-items: center;
-    justify-content: center;
     gap: var(--space-3) var(--space-6);
-    text-align: left;
   }
 
-  .site-footer__inner > * {
-    flex: 0 0 auto;
+  .site-footer__brand {
+    justify-self: start;
   }
 
   .site-footer__links {
+    justify-self: center;
     flex-wrap: nowrap;
+  }
+
+  .site-footer__copy {
+    justify-self: end;
+  }
+
+  .age-disclaimer {
+    grid-column: 1 / -1;
+    justify-self: center;
   }
 }
 
