@@ -2164,3 +2164,40 @@ overflow: hidden;
 .reader__zone {
   z-index: 2 !important;
 }
+
+/* ============================================================
+   4. текстовые страницы «роман-вебтуна» (текст между кадрами)
+   Отменяют обнуления из блока 1 для текстовых блоков ленты.
+   ============================================================ */
+
+.reader__webtoon-page.reader__webtoon-page--text {
+  margin: 0;
+  padding: 0 !important;
+  min-height: 72vh;
+  min-height: 72svh;
+  line-height: 0;
+  display: block;
+}
+
+.reader__webtoon-page--text + .reader__webtoon-page,
+.reader__webtoon-page + .reader__webtoon-page--text {
+  border-top: 0 !important;
+}
+
+.reader__text {
+  max-width: clamp(340px, 29vw, 470px);
+  margin: 0 auto;
+  padding: clamp(64px, 18svh, 128px) clamp(20px, 5vw, 40px);
+  color: var(--text-secondary);
+  font-size: clamp(1rem, 1.3vw, 1.15rem);
+  line-height: 1.7;
+  text-align: left;
+}
+
+.reader__text p {
+  margin: 0 0 var(--space-4);
+}
+
+.reader__text p:last-child {
+  margin-bottom: 0;
+}

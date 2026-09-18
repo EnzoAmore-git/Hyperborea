@@ -467,37 +467,51 @@ export default function ComicReader() {
           </button>
         </header>
 
-        {ch?.pages.map((pg, i) => (
-          <figure
-            key={pg.num}
-            className="reader__webtoon-page"
-            data-page={pg.num}
-          >
-            <picture>
-              <source
-                type="image/webp"
-                srcSet={pg.srcset}
-                sizes="(min-width: 640px) 100vw, 100svw"
-              />
-              <img
-                className="reader__webtoon-img"
-                src={pg.src}
-                alt=""
-                loading={i < 3 || saveData ? 'eager' : 'lazy'}
-                decoding="async"
-                draggable={false}
-                onError={() => handleImgError(pg.num)}
-              />
-            </picture>
-            {errPages[pg.num] && (
-              <ReaderError
-                title="Страница не загрузилась"
-                note="Нажмите «Повторить» или листайте дальше."
-                onRetry={() => retryImg(pg.num)}
-              />
-            )}
-          </figure>
-        ))}
+        {ch?.pages.map((pg, i) =>
+          pg.type === 'text' ? (
+            <figure
+              key={pg.num}
+              className="reader__webtoon-page reader__webtoon-page--text"
+              data-page={pg.num}
+            >
+              <div className="reader__text">
+                {pg.paragraphs.map((p, j) => (
+                  <p key={j}>{p}</p>
+                ))}
+              </div>
+            </figure>
+          ) : (
+            <figure
+              key={pg.num}
+              className="reader__webtoon-page"
+              data-page={pg.num}
+            >
+              <picture>
+                <source
+                  type="image/webp"
+                  srcSet={pg.srcset}
+                  sizes="(min-width: 640px) 100vw, 100svw"
+                />
+                <img
+                  className="reader__webtoon-img"
+                  src={pg.src}
+                  alt=""
+                  loading={i < 3 || saveData ? 'eager' : 'lazy'}
+                  decoding="async"
+                  draggable={false}
+                  onError={() => handleImgError(pg.num)}
+                />
+              </picture>
+              {errPages[pg.num] && (
+                <ReaderError
+                  title="Страница не загрузилась"
+                  note="Нажмите «Повторить» или листайте дальше."
+                  onRetry={() => retryImg(pg.num)}
+                />
+              )}
+            </figure>
+          ),
+        )}
 
         {/* конец главы */}
         {ch && (
