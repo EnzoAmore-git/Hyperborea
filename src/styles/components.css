@@ -1692,27 +1692,6 @@ input[type='radio'] {
   background: var(--bg-deep);
 }
 
-.reader__webtoon-page + .reader__webtoon-page {
-  border-top: 0;
-}
-
-.reader__webtoon-page + .reader__webtoon-page {
-  border-top: 1px solid var(--line-subtle);
-}
-
-.reader__webtoon-page.is-last {
-  padding-bottom: 30vh;
-}
-
-.reader__webtoon-img {
-  display: block;
-  width: 100%;
-  height: auto;
-  user-select: none;
-  -webkit-user-drag: none;
-  filter: drop-shadow(0 6px 24px rgba(0, 0, 0, 0.4));
-}
-
 /* конец главы */
 .reader__endafter {
   scroll-snap-align: none;
@@ -2135,6 +2114,8 @@ overflow: hidden;
 .reader__webtoon-page {
   margin: 0;
   padding: 0 !important;
+  min-height: 0;
+  line-height: 0;
 }
 
 .reader__webtoon-page + .reader__webtoon-page,
@@ -2143,8 +2124,14 @@ overflow: hidden;
 }
 
 .reader__webtoon-img {
+  display: block;
+  width: 100%;
+  height: auto;
   margin: 0;
   padding: 0 !important;
+  user-select: none;
+  -webkit-user-drag: none;
+  filter: none;
 }
 
 /* 2. десктоп: зоны клика держатся телефонной колонки по центру */

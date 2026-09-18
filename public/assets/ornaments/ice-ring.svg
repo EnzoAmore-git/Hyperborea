@@ -1,7 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" width="80" height="80">
-  <!-- Ховер-кольцо с рунами для карточек команды (ледяной свет) -->
-  <circle cx="40" cy="40" r="32" fill="none" stroke="#7FA8B8" stroke-width="1.5" opacity="0.6"/>
-  <circle cx="40" cy="40" r="26" fill="none" stroke="#7FA8B8" stroke-width="1" opacity="0.4"/>
-  <path d="M36 10 L40 6 L44 10 M36 70 L40 74 L44 70 M10 36 L6 40 L10 44 M70 36 L74 40 L70 44" fill="none" stroke="#7FA8B8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-  <circle cx="40" cy="40" r="2" fill="#7FA8B8" opacity="0.3"/>
-</svg>
