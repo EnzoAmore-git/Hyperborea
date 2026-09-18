@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { Link, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { DURATION, EASING, prefersReducedMotion } from '../animations/timing.js';
@@ -157,22 +158,33 @@ export default function Navbar() {
         </button>
       </nav>
 
-      <AnimatePresence>
-        {open && (
-          <motion.div
-            id="mob-menu"
-            ref={menuRef}
-            className="mob-menu"
-            role="dialog"
-            aria-modal="true"
-            aria-label="Меню"
-            tabIndex="-1"
-            variants={menuVariants}
-            initial="hidden"
-            animate="visible"
-            exit="exit"
-          >
-            <ul className="mob-menu__list container">
+      {createPortal(
+        <AnimatePresence>
+          {open && (
+            <motion.div
+              id="mob-menu"
+              ref={menuRef}
+              className="mob-menu"
+              role="dialog"
+              aria-modal="true"
+              aria-label="Меню"
+              tabIndex="-1"
+              variants={menuVariants}
+              initial="hidden"
+              animate="visible"
+              exit="exit"
+            >
+              <button
+                type="button"
+                className="mob-menu__close"
+                aria-label="Закрыть меню"
+                onClick={() => setOpen(false)}
+              >
+                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                  <path d="M6 6 L18 18 M18 6 L6 18" />
+                </svg>
+              </button>
+              <ul className="mob-menu__list container">
               {LINKS.map((l, i) => (
                 <motion.li
                   key={l.href}
@@ -204,7 +216,9 @@ export default function Navbar() {
             </ul>
           </motion.div>
         )}
-      </AnimatePresence>
+      </AnimatePresence>,
+      document.body,
+    )}
     </header>
   );
 }

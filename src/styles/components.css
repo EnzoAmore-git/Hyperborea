@@ -343,10 +343,45 @@ input[type='radio'] {
   display: flex;
   align-items: center;
   padding-top: 96px;
-  background: rgba(11, 10, 16, 0.97);
-  -webkit-backdrop-filter: blur(20px);
-  backdrop-filter: blur(20px);
+  background: var(--bg-void);
   border-left: 1px solid var(--line-subtle);
+}
+
+.mob-menu__close {
+  position: fixed;
+  top: var(--space-3);
+  right: var(--space-3);
+  z-index: calc(var(--z-menu) + 1);
+  display: grid;
+  place-items: center;
+  inline-size: 44px;
+  block-size: 44px;
+  padding: 0;
+  border: 1px solid var(--line-subtle);
+  border-radius: 50%;
+  background: var(--bg-deep);
+  color: var(--text-primary);
+  cursor: pointer;
+  transition:
+    color var(--dur-fast) var(--ease-standard),
+    border-color var(--dur-fast) var(--ease-standard),
+    background var(--dur-fast) var(--ease-standard);
+}
+
+.mob-menu__close svg {
+  inline-size: 20px;
+  block-size: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
+.mob-menu__close:hover,
+.mob-menu__close:focus-visible {
+  color: var(--accent-blood);
+  border-color: var(--accent-blood);
+  background: var(--bg-void);
 }
 
 .mob-menu__list {
@@ -478,19 +513,20 @@ input[type='radio'] {
   }
 
   .site-footer__inner {
-    grid-template-columns: auto 1fr auto;
+    display: flex;
+    flex-wrap: wrap;
     align-items: center;
-    gap: var(--space-4);
-    justify-items: stretch;
+    justify-content: center;
+    gap: var(--space-3) var(--space-6);
     text-align: left;
   }
 
-  .site-footer__links {
-    justify-content: center;
+  .site-footer__inner > * {
+    flex: 0 0 auto;
   }
 
-  .age-disclaimer {
-    justify-self: end;
+  .site-footer__links {
+    flex-wrap: nowrap;
   }
 }
 
@@ -707,7 +743,6 @@ input[type='radio'] {
 .g-filter__item {
   display: inline-flex;
   align-items: center;
-  gap: var(--space-1);
   padding: var(--space-1) var(--space-2);
   border: 1px solid var(--line-subtle);
   border-radius: var(--radius-full);
@@ -734,17 +769,28 @@ input[type='radio'] {
 }
 
 .g-filter__marker {
-  width: 8px;
-  height: 8px;
+  width: 0;
+  height: 0;
   flex-shrink: 0;
+  margin-inline-end: 0;
   border-radius: 50%;
   background: currentColor;
   opacity: 0;
-  transition: opacity var(--dur-fast) var(--ease-standard);
+  transform: scale(0);
+  transition:
+    width var(--dur-fast) var(--ease-standard),
+    height var(--dur-fast) var(--ease-standard),
+    margin-inline-end var(--dur-fast) var(--ease-standard),
+    opacity var(--dur-fast) var(--ease-standard),
+    transform var(--dur-fast) var(--ease-standard);
 }
 
 .g-filter__item.is-active .g-filter__marker {
+  width: 8px;
+  height: 8px;
+  margin-inline-end: var(--space-1);
   opacity: 1;
+  transform: scale(1);
 }
 
 /* ----- Карточка арта ----- */
@@ -999,9 +1045,17 @@ input[type='radio'] {
 }
 
 .support-card__icon {
-  color: var(--card-accent);
-  font-size: var(--fs-h1);
-  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--fs-h1);
+  height: var(--fs-h1);
+}
+
+.support-card__icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
 .support-card__name {
@@ -1595,7 +1649,7 @@ input[type='radio'] {
 
 .reader {
   align-items: stretch;
-  justify-content: flex-start;
+  justify-content: center;
   flex-direction: row;
 }
 
@@ -1617,7 +1671,7 @@ input[type='radio'] {
 .reader__top {
   position: sticky;
   top: 0;
-  z-index: 5;
+  z-index: 8;
   justify-content: space-between;
   background: linear-gradient(180deg, rgba(11, 10, 16, 0.94), rgba(11, 10, 16, 0.45));
   -webkit-backdrop-filter: blur(8px);
@@ -1625,16 +1679,21 @@ input[type='radio'] {
 }
 
 /* страницы вебтуна: выровнены, каждый фрейм — точка снапа */
+/* вертикальный вебтун: фреймы флеша, бесшовная лента */
 .reader__webtoon-page {
   position: relative;
   margin: 0;
-  padding: 0 0 var(--space-3);
-  min-height: 55vh;
-  scroll-snap-align: start;
-  scroll-snap-stop: always;
+  padding: 0;
+  min-height: 40vh;
   display: flex;
   flex-direction: column;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
   background: var(--bg-deep);
+}
+
+.reader__webtoon-page + .reader__webtoon-page {
+  border-top: 0;
 }
 
 .reader__webtoon-page + .reader__webtoon-page {
@@ -1643,16 +1702,6 @@ input[type='radio'] {
 
 .reader__webtoon-page.is-last {
   padding-bottom: 30vh;
-}
-
-.reader__topplate {
-  margin: 0;
-  padding: var(--space-2) var(--space-3) 0 var(--space-3);
-  font-family: var(--font-mono);
-  font-size: var(--fs-tiny);
-  text-transform: uppercase;
-  letter-spacing: 0.14em;
-  color: var(--text-muted);
 }
 
 .reader__webtoon-img {
@@ -1667,6 +1716,8 @@ input[type='radio'] {
 /* конец главы */
 .reader__endafter {
   scroll-snap-align: none;
+  position: relative;
+  z-index: 3;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -1685,7 +1736,7 @@ input[type='radio'] {
   top: 0;
   bottom: 0;
   width: 50%;
-  z-index: 6;
+  z-index: 2;
   border: 0;
   padding: 0;
   background: transparent;
@@ -1710,9 +1761,9 @@ input[type='radio'] {
   align-items: center;
   gap: var(--space-3);
   padding: var(--space-4) var(--space-2);
-  overflow: hidden;
+overflow: hidden;
   background: var(--bg-deep);
-  z-index: 2;
+  z-index: 6;
 }
 
 .reader__side--pages {
@@ -1727,28 +1778,6 @@ input[type='radio'] {
 
 .reader__scroll {
   order: 2;
-}
-
-/* половинки солярного символа */
-.reader__solar {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 800'><g fill='none' stroke='%238C1F28' stroke-linecap='round' stroke-linejoin='round'><circle cx='400' cy='400' r='392' stroke-width='2'/><circle cx='400' cy='400' r='336' stroke-width='2' stroke-dasharray='3 27'/><circle cx='400' cy='400' r='150' stroke-width='8'/><circle cx='400' cy='400' r='118' stroke-width='2'/><path d='M400 22 V280 M400 520 V778 M22 400 H280 M520 400 H778' stroke-width='6'/><path d='M133 133 L303 303 M497 497 L667 667 M667 133 L497 303 M303 497 L133 667' stroke-width='6'/></g><g fill='%238C1F28'><circle cx='400' cy='20' r='6'/><circle cx='400' cy='780' r='6'/><circle cx='20' cy='400' r='6'/><circle cx='780' cy='400' r='6'/><circle cx='131' cy='131' r='6'/><circle cx='669' cy='669' r='6'/><circle cx='669' cy='131' r='6'/><circle cx='131' cy='669' r='6'/></g></svg>");
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: clamp(120px, 9.5vw, 168px);
-  opacity: 0.2;
-  will-change: transform;
-  animation: slavic-spin 240s linear infinite;
-}
-
-.reader__solar--left {
-  clip-path: inset(0 50% 0 0);
-}
-
-.reader__solar--right {
-  clip-path: inset(0 0 0 50%);
 }
 
 .reader__side-label {
@@ -1789,9 +1818,17 @@ input[type='radio'] {
     border-color var(--dur-fast) var(--ease-standard);
 }
 
-.reader__side-btn:hover {
+.reader__side-btn:hover:not(:disabled) {
   color: var(--accent-blood);
   border-color: var(--accent-blood-40);
+}
+
+.reader__side-btn:disabled {
+  opacity: 0.38;
+  cursor: not-allowed;
+  color: var(--text-muted);
+  border-color: var(--line-subtle);
+  background: rgba(18, 16, 26, 0.45);
 }
 
 .reader__counter {
@@ -1970,6 +2007,19 @@ input[type='radio'] {
   color: var(--text-muted);
 }
 
+/* десктоп: читалка — вертикальная «телефонная» колонка по центру */
+@media (min-width: 1024px) {
+  .reader__scroll {
+    flex: 0 1 clamp(340px, 29vw, 470px);
+    scroll-padding-top: 58px;
+  }
+
+  /* вся вертикальная страница помещается на экране */
+  .reader__webtoon-page {
+    min-height: auto;
+  }
+}
+
 /* ============================================================
    Адаптив читалки: планшеты/мобильные
    ============================================================ */
@@ -2001,12 +2051,121 @@ input[type='radio'] {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .reader__solar {
-    animation: none;
-  }
-
   .reader__scale-fill,
   .reader__seek-fill {
     transition: none;
   }
+}
+
+/* ============================================================
+   Финальные правки-переопределения читалки (высший приоритет)
+   1) бесшовная лента вебтуна — никаких разделителей между фреймами
+   2) десктоп: зоны клика липнут к колонке комикса, а не к углам
+   ============================================================ */
+
+/* 1. убираем разделители и зазоры между фреймами */
+.reader__webtoon-page {
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.reader__webtoon-page + .reader__webtoon-page {
+  border-top: 0;
+  margin-top: 0;
+}
+
+.reader__webtoon-img {
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+/* 2. десктоп: зоны клика прижимаются к колонке комикса */
+@media (min-width: 1024px) {
+  .reader__zone--prev {
+    left: clamp(88px, 9vw, 128px);
+  }
+
+  .reader__zone--next {
+    right: clamp(88px, 9vw, 128px);
+  }
+}
+
+/* ============================================================
+   Читалка — окончательные правки (порядок в конце файла = приоритет)
+   1) бесшовная лента: страницы без разделителей и зазоров
+   2) десктоп: зоны клика прижаты к колонке комикса по центру
+   ============================================================ */
+
+/* 1. бесшовная лента вебтуна */
+.reader__webtoon-page {
+  margin-bottom: 0;
+  padding-bottom: 0 !important;
+  scroll-snap-margin: 0;
+}
+
+.reader__webtoon-page + .reader__webtoon-page {
+  border-top: 0 !important;
+}
+
+/* 2. десктоп: зоны клика «липнут» к телефонной колонке, а не к углам экрана */
+@media (min-width: 1024px) {
+  .reader__zone {
+    top: 0;
+    bottom: 0;
+    width: 50%;
+  }
+
+  .reader__zone--prev {
+    left: clamp(88px, 9vw, 128px);
+  }
+
+  .reader__zone--next {
+    right: clamp(88px, 9vw, 128px);
+  }
+}
+/* ============================================================
+   ФИНАЛЬНЫЕ ПЕРЕОПРЕДЕЛЕНИЯ ЧИТАЛКИ (приоритет — конец файла)
+   Обнуляют любые конфликтные ранние блоки:
+   * бесшовная лента вебтуна (без разделителей и зазоров между фреймами)
+   * зоны клика прижаты к центральной колонке, а не к углам экрана
+   * верхняя/нижняя панели выше зон клика (кнопки всегда кликабельны)
+   ============================================================ */
+
+/* 1. бесшовная лента: никаких бордюров и отступов между фреймами */
+.reader__webtoon-page {
+  margin: 0;
+  padding: 0 !important;
+}
+
+.reader__webtoon-page + .reader__webtoon-page,
+.reader__webtoon-page.is-last {
+  border-top: 0 !important;
+}
+
+.reader__webtoon-img {
+  margin: 0;
+  padding: 0 !important;
+}
+
+/* 2. десктоп: зоны клика держатся телефонной колонки по центру */
+@media (min-width: 1024px) {
+  .reader__zone--prev {
+    left: calc(50% - clamp(340px, 29vw, 470px) / 2);
+    right: auto;
+  }
+
+  .reader__zone--next {
+    right: calc(50% - clamp(340px, 29vw, 470px) / 2);
+    left: auto;
+  }
+}
+
+/* 3. панели управления выше невидимых зон клика */
+.reader__top,
+.reader__bottom {
+  z-index: 8 !important;
+}
+
+.reader__zone {
+  z-index: 2 !important;
 }

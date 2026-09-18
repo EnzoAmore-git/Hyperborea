@@ -3,6 +3,9 @@
  * Телеграм-канал взят из артбука проекта.
  */
 import SectionTitle from './SectionTitle.jsx';
+import boostyIcon from '../assets/icons/Subtract.svg';
+import patreonIcon from '../assets/icons/Subtract-1.svg';
+import telegramIcon from '../assets/icons/Subtract-2.svg';
 
 const PLATFORMS = [
   {
@@ -11,7 +14,7 @@ const PLATFORMS = [
     href: 'https://boosty.to',
     tone: 'ember',
     text: 'Ежемесячная поддержка без посредников.',
-    icon: '◈',
+    icon: boostyIcon,
   },
   {
     id: 'patreon',
@@ -19,7 +22,7 @@ const PLATFORMS = [
     href: 'https://patreon.com',
     tone: 'gold',
     text: 'Доступ к эксклюзивным материалам и отрисовкам.',
-    icon: '◆',
+    icon: patreonIcon,
   },
   {
     id: 'telegram',
@@ -27,7 +30,7 @@ const PLATFORMS = [
     href: 'https://t.me/artzavtrakartiomzhukov',
     tone: 'ice',
     text: 'Подписывайтесь: наброски, новости и анонсы глав.',
-    icon: '✶',
+    icon: telegramIcon,
   },
 ];
 
@@ -51,7 +54,7 @@ export default function Support() {
                 rel="noopener noreferrer"
               >
                 <span className="support-card__icon" aria-hidden="true">
-                  {p.icon}
+                  <img src={p.icon} alt="" />
                 </span>
                 <h3 className="support-card__name">{p.name}</h3>
                 <p className="support-card__text">{p.text}</p>

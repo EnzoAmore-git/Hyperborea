@@ -58,11 +58,17 @@ export default function ComicReader() {
   const [hintVisible, setHintVisible] = useState(false);
   const [fatal, setFatal] = useState(false);
   const [errPages, setErrPages] = useState({});
+  const [navTick, setNavTick] = useState(0);
 
   const scrollRef = useRef(null);
-  const pageEls = useRef({});
+  const readerRef = useRef(null);
   const lastActiveRef = useRef(1);
+  const pendingScrollRef = useRef(null);
+  const rewindRafRef = useRef(null);
   const rafRef = useRef(null);
+  const programmaticUntilRef = useRef(0);
+  const wheelAccumRef = useRef(0);
+  const wheelLockRef = useRef(0);
   const hintTimerRef = useRef(null);
   const panelRef = useRef(null);
   const exitRef = useRef(null);
@@ -83,12 +89,29 @@ export default function ComicReader() {
 
   /* ---------- скролл к странице ---------- */
   const scrollToPage = (num, behavior) => {
-    const el = pageEls.current[Number(num)];
-    if (!el || !scrollRef.current) return;
+    const box = scrollRef.current;
+    if (!box) return;
+    const el = box.querySelector(
+      `.reader__webtoon-page[data-page="${Number(num)}"]`,
+    );
+    if (!el) return;
     el.scrollIntoView({
       behavior: behavior === 'auto' || reduceMotion() ? 'auto' : 'smooth',
       block: 'start',
     });
+  };
+
+  /* ---------- переход к странице (счётчики синхронны сразу) ---------- */
+  const goToPage = (num, behavior = 'smooth') => {
+    if (!ch) return;
+    const p = Math.max(1, Math.min(ch.pages.length, Number(num) || 1));
+    lastActiveRef.current = p;
+    setPageNum(p);
+    savePosition(ch.id, p);
+    navigate(`/read/${ch.id}/${p}`, { replace: true });
+    // пока идёт программный скролл, не даём onScroll «откатить» счётчик назад
+    programmaticUntilRef.current = performance.now() + 900;
+    scrollToPage(p, behavior);
   };
 
   /* ---------- определение активной страницы по скроллу ---------- */
@@ -98,13 +121,17 @@ export default function ComicReader() {
       rafRef.current = null;
       const el = scrollRef.current;
       if (!el || !ch) return;
-      const pages = Object.keys(pageEls.current).map(Number).sort((a, b) => a - b);
+      if (performance.now() < programmaticUntilRef.current) return;
+      const nodes = el.querySelectorAll('.reader__webtoon-page');
+      if (!nodes.length) return;
       let active = 1;
       const top = el.getBoundingClientRect().top + TOP_OFFSET;
-      for (const num of pages) {
-        const rect = pageEls.current[num].getBoundingClientRect();
-        if (rect.top <= top) active = num;
-      }
+      nodes.forEach((node) => {
+        if (node.getBoundingClientRect().top <= top) {
+          active = Number(node.dataset.page) || active;
+        }
+      });
+      active = Math.max(1, Math.min(ch.pages.length, active));
       if (active !== lastActiveRef.current) {
         lastActiveRef.current = active;
         setPageNum(active);
@@ -119,40 +146,137 @@ export default function ComicReader() {
     const target = getChapter(id);
     if (!target) return;
     const p = clampNum(num, target);
-    if (scrollRef.current) scrollRef.current.scrollTop = 0;
     setChapterId(id);
     lastActiveRef.current = p;
     setPageNum(p);
     setErrPages({});
     savePosition(id, p);
+    pendingScrollRef.current = p;
+    setNavTick((t) => t + 1);
     setHintVisible(true);
     clearTimeout(hintTimerRef.current);
     hintTimerRef.current = setTimeout(
       () => setHintVisible(false),
       reduceMotion() ? 1 : HINT_DURATION,
     );
-    requestAnimationFrame(() => scrollToPage(p, 'auto'));
   };
 
-  const nextPage = () => {
-    if (!ch) return;
-    if (pageNum >= ch.pages.length) {
-      const next = getNextChapter(ch.id);
-      if (next) openChapter(next.id, 1);
+  /* ---------- плавное «отматывание» к началу комикса ---------- */
+  const cancelRewind = () => {
+    if (rewindRafRef.current) {
+      cancelAnimationFrame(rewindRafRef.current);
+      rewindRafRef.current = null;
+    }
+    programmaticUntilRef.current = 0;
+    if (scrollRef.current) scrollRef.current.style.scrollSnapType = '';
+  };
+
+  const restartComic = () => {
+    const box = scrollRef.current;
+    const finish = () => {
+      if (box) box.style.scrollSnapType = '';
+      openChapter(chapters[0].id, 1);
+    };
+    if (!box || !ch || reduceMotion()) {
+      finish();
       return;
     }
-    scrollToPage(pageNum + 1, 'smooth');
+    const from = box.scrollTop;
+    if (from <= 0) {
+      finish();
+      return;
+    }
+    // на время анимации отключаем обязательный снап, чтобы кадры не «дёргались»
+    box.style.scrollSnapType = 'none';
+    const duration = Math.min(1400, Math.max(500, from * 0.4));
+    const t0 = performance.now();
+    const ease = (t) => 1 - Math.pow(1 - t, 3);
+    const step = (now) => {
+      const t = Math.min(1, (now - t0) / duration);
+      box.scrollTop = from * (1 - ease(t));
+      if (t < 1) {
+        rewindRafRef.current = requestAnimationFrame(step);
+      } else {
+        rewindRafRef.current = null;
+        finish();
+      }
+    };
+    cancelRewind();
+    programmaticUntilRef.current = performance.now() + duration + 100;
+    rewindRafRef.current = requestAnimationFrame(step);
+  };
+
+  // Скролл применяем после монтирования страниц новой главы
+  useEffect(() => {
+    if (!ch || pendingScrollRef.current == null) return;
+    const p = pendingScrollRef.current;
+    pendingScrollRef.current = null;
+    cancelRewind();
+    if (scrollRef.current) scrollRef.current.scrollTop = 0;
+    scrollToPage(p, 'auto');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [navTick]);
+
+  useEffect(() => cancelRewind, []);
+
+  const nextPage = () => {
+    if (!ch || pageNum >= ch.pages.length) return;
+    goToPage(pageNum + 1, 'smooth');
   };
 
   const prevPage = () => {
+    if (!ch || pageNum <= 1) return;
+    goToPage(pageNum - 1, 'smooth');
+  };
+
+  /* ---------- колесо мыши (десктоп): по странице за щелчок ---------- */
+  const wheelStep = (dir) => {
     if (!ch) return;
+    if (dir > 0) {
+      if (pageNum >= ch.pages.length) {
+        const next = getNextChapter(ch.id);
+        if (next) openChapter(next.id, 1);
+        return;
+      }
+      goToPage(pageNum + 1, 'smooth');
+      return;
+    }
     if (pageNum <= 1) {
       const prev = getPrevChapter(ch.id);
       if (prev) openChapter(prev.id, prev.pages.length);
       return;
     }
-    scrollToPage(pageNum - 1, 'smooth');
+    goToPage(pageNum - 1, 'smooth');
   };
+
+  useEffect(() => {
+    const root = readerRef.current;
+    if (!root) return;
+    const onWheel = (e) => {
+      if (panelOpen) return;
+      if (!window.matchMedia('(min-width: 1024px)').matches) return;
+      if (e.ctrlKey) return;
+      if (Math.abs(e.deltaY) <= Math.abs(e.deltaX)) return;
+      if (e.target instanceof Element && e.target.closest('.reader__panel')) return;
+      e.preventDefault();
+      e.stopPropagation();
+      cancelRewind();
+      let d = e.deltaY;
+      if (e.deltaMode === 1) d *= 16;
+      else if (e.deltaMode === 2) d *= scrollRef.current?.clientHeight || 600;
+      wheelAccumRef.current += d;
+      const now = performance.now();
+      if (now - wheelLockRef.current < 220) return;
+      if (Math.abs(wheelAccumRef.current) < 40) return;
+      const dir = wheelAccumRef.current > 0 ? 1 : -1;
+      wheelAccumRef.current = 0;
+      wheelLockRef.current = now;
+      wheelStep(dir);
+    };
+    root.addEventListener('wheel', onWheel, { passive: false });
+    return () => root.removeEventListener('wheel', onWheel, { passive: false });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [panelOpen, ch, pageNum]);
 
   const nextChapter = () => {
     if (!ch) return;
@@ -163,7 +287,7 @@ export default function ComicReader() {
   const prevChapter = () => {
     if (!ch) return;
     const prev = getPrevChapter(ch.id);
-    if (prev) openChapter(prev.id, prev.pages.length);
+    if (prev) openChapter(prev.id, 1);
   };
 
   const goChapter = (id) => {
@@ -217,11 +341,11 @@ export default function ComicReader() {
           break;
         case 'Home':
           e.preventDefault();
-          if (ch) scrollToPage(1, 'smooth');
+          if (ch) goToPage(1, 'smooth');
           break;
         case 'End':
           e.preventDefault();
-          if (ch) scrollToPage(ch.pages.length, 'smooth');
+          if (ch) goToPage(ch.pages.length, 'smooth');
           break;
         case 'g':
         case 'G':
@@ -263,7 +387,9 @@ export default function ComicReader() {
       delete next[num];
       return next;
     });
-    const img = pageEls.current[num]?.querySelector('img');
+    const img = scrollRef.current?.querySelector(
+      `.reader__webtoon-page[data-page="${Number(num)}"] img`,
+    );
     if (img) {
       const src = img.getAttribute('src');
       img.removeAttribute('src');
@@ -280,7 +406,7 @@ export default function ComicReader() {
       1,
       Math.min(ch.pages.length, Math.round(frac * ch.pages.length)),
     );
-    scrollToPage(num, 'smooth');
+    goToPage(num, 'smooth');
   };
 
   const exitReader = () => navigate('/', { replace: true });
@@ -306,10 +432,16 @@ export default function ComicReader() {
   return (
     <div
       className="reader"
+      ref={readerRef}
       aria-label={`Читалка: ${ch ? ch.title : ''}`}
     >
       {/* ----- вертикальный вебтун ----- */}
-      <main className="reader__scroll" ref={scrollRef} onScroll={handleScroll}>
+      <main
+        className="reader__scroll"
+        ref={scrollRef}
+        onScroll={handleScroll}
+        data-lenis-prevent
+      >
         <header className="reader__top">
           <button
             type="button"
@@ -340,13 +472,7 @@ export default function ComicReader() {
             key={pg.num}
             className="reader__webtoon-page"
             data-page={pg.num}
-            ref={(el) => {
-              if (el) pageEls.current[pg.num] = el;
-            }}
           >
-            <p className="reader__topplate meta" aria-hidden="true">
-              {ch.title} · стр. {pg.num}
-            </p>
             <picture>
               <source
                 type="image/webp"
@@ -376,7 +502,9 @@ export default function ComicReader() {
         {/* конец главы */}
         {ch && (
           <div className="reader__endafter">
-            <p className="meta">Конец главы</p>
+            <p className="meta">
+              {getNextChapter(ch.id) ? 'Конец главы' : 'Продолжение следует'}
+            </p>
             {getNextChapter(ch.id) ? (
               <button
                 type="button"
@@ -386,8 +514,12 @@ export default function ComicReader() {
                 Дальше · {getNextChapter(ch.id).title}
               </button>
             ) : (
-              <button type="button" className="btn btn--ghost" onClick={exitReader}>
-                Вернуться на главную
+              <button
+                type="button"
+                className="btn btn--ghost"
+                onClick={restartComic}
+              >
+                В начало
               </button>
             )}
           </div>
@@ -408,15 +540,15 @@ export default function ComicReader() {
         />
       </main>
 
-      {/* ----- левая панель: страницы (солярный символ) ----- */}
+      {/* ----- левая панель: страницы ----- */}
       <aside className="reader__side reader__side--pages">
-        <div className="reader__solar reader__solar--left" aria-hidden="true" />
         <span className="reader__side-label meta">Страница</span>
         <div className="reader__side-arrows">
           <button
             type="button"
             className="reader__side-btn"
             aria-label="Предыдущая страница"
+            disabled={!ch || pageNum <= 1}
             onClick={prevPage}
           >
             ↑
@@ -425,6 +557,7 @@ export default function ComicReader() {
             type="button"
             className="reader__side-btn"
             aria-label="Следующая страница"
+            disabled={!ch || pageNum >= ch.pages.length}
             onClick={nextPage}
           >
             ↓
@@ -443,15 +576,15 @@ export default function ComicReader() {
         </div>
       </aside>
 
-      {/* ----- правая панель: главы (солярный символ) ----- */}
+      {/* ----- правая панель: главы ----- */}
       <aside className="reader__side reader__side--chapters">
-        <div className="reader__solar reader__solar--right" aria-hidden="true" />
         <span className="reader__side-label meta">Глава</span>
         <div className="reader__side-arrows">
           <button
             type="button"
             className="reader__side-btn"
             aria-label="Предыдущая глава"
+            disabled={!getPrevChapter(ch?.id)}
             onClick={prevChapter}
           >
             ↑
@@ -460,6 +593,7 @@ export default function ComicReader() {
             type="button"
             className="reader__side-btn"
             aria-label="Следующая глава"
+            disabled={!getNextChapter(ch?.id)}
             onClick={nextChapter}
           >
             ↓
@@ -491,6 +625,7 @@ export default function ComicReader() {
           type="button"
           className="reader__btn"
           aria-label="Предыдущая страница"
+          disabled={!ch || pageNum <= 1}
           onClick={prevPage}
         >
           ←
@@ -512,6 +647,7 @@ export default function ComicReader() {
           type="button"
           className="reader__btn"
           aria-label="Следующая страница"
+          disabled={!ch || pageNum >= ch.pages.length}
           onClick={nextPage}
         >
           →
@@ -535,6 +671,7 @@ export default function ComicReader() {
           aria-label="Навигация по главам"
           ref={panelRef}
           tabIndex={-1}
+          data-lenis-prevent
         >
           <div className="reader__panel-card">
             <p className="reader__meta">Оглавление</p>
