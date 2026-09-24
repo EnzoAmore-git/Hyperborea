@@ -1672,9 +1672,7 @@ input[type='radio'] {
   -webkit-overflow-scrolling: touch;
   scroll-snap-type: y mandatory;
   scroll-padding-top: 58px;
-  background:
-    var(--bg-void)
-    radial-gradient(circle at 50% 0, var(--accent-blood-06, rgba(140, 31, 40, 0.06)), transparent 55%);
+  background: var(--bg-deep);
 }
 
 /* верхняя панель теперь sticky внутри ленты */
@@ -2183,8 +2181,7 @@ overflow: hidden;
 .reader__webtoon-page.reader__webtoon-page--text {
   margin: 0;
   padding: 0 !important;
-  min-height: 72vh;
-  min-height: 72svh;
+  min-height: 0;
   line-height: 0;
   display: block;
 }
@@ -2197,15 +2194,15 @@ overflow: hidden;
 .reader__text {
   max-width: clamp(340px, 29vw, 470px);
   margin: 0 auto;
-  padding: clamp(64px, 18svh, 128px) clamp(20px, 5vw, 40px);
+  padding: clamp(24px, 6svh, 48px) clamp(20px, 5vw, 40px);
   color: var(--text-secondary);
   font-size: clamp(1rem, 1.3vw, 1.15rem);
-  line-height: 1.7;
+  line-height: 1.6;
   text-align: left;
 }
 
 .reader__text p {
-  margin: 0 0 var(--space-4);
+  margin: 0 0 var(--space-3);
 }
 
 .reader__text p:last-child {
@@ -2272,4 +2269,33 @@ overflow: hidden;
   .reader__zone {
     display: none;
   }
+}
+
+/* ============================================================
+   7. роман-вебтун: зазоры по схеме «текст → 24px → картинка → 72px → текст»
+   Картинка относится к тексту НАД ней: маленький отступ над картинкой,
+   большой — после неё до следующего текста. Плюс отдельная полноэкранная
+   титульная страница главы, которая пагинируется как все страницы.
+   ============================================================ */
+
+.reader__webtoon-page.reader__webtoon-page--text {
+  margin-bottom: 24px;
+}
+
+.reader__webtoon-page.reader__webtoon-page--img {
+  margin-bottom: 72px;
+}
+
+/* титульная страница главы — на весь экран, листается как остальные */
+.reader__webtoon-page.reader__webtoon-page--chapter {
+  min-height: 100vh;
+  min-height: 100svh;
+  line-height: normal;
+}
+
+.reader__webtoon-page--chapter .reader__chapter-head {
+  flex: 1;
+  min-height: 100%;
+  margin: 0;
+  line-height: normal;
 }

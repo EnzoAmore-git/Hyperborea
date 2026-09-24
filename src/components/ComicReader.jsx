@@ -468,16 +468,19 @@ export default function ComicReader() {
           </button>
         </header>
 
-        {/* заголовок главы в начале ленты */}
-        {ch && (
-          <div className="reader__chapter-head">
-            <span className="reader__chapter-number">{ch.title}</span>
-            <h2 className="reader__chapter-title">{ch.subtitle}</h2>
-          </div>
-        )}
-
         {ch?.pages.map((pg, i) =>
-          pg.type === 'text' ? (
+          pg.type === 'chapter' ? (
+            <figure
+              key={pg.num}
+              className="reader__webtoon-page reader__webtoon-page--chapter"
+              data-page={pg.num}
+            >
+              <div className="reader__chapter-head">
+                <span className="reader__chapter-number">{ch.title}</span>
+                <h2 className="reader__chapter-title">{ch.subtitle}</h2>
+              </div>
+            </figure>
+          ) : pg.type === 'text' ? (
             <figure
               key={pg.num}
               className="reader__webtoon-page reader__webtoon-page--text"
@@ -492,7 +495,7 @@ export default function ComicReader() {
           ) : (
             <figure
               key={pg.num}
-              className="reader__webtoon-page"
+              className="reader__webtoon-page reader__webtoon-page--img"
               data-page={pg.num}
             >
               <picture>
