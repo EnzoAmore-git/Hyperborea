@@ -117,7 +117,7 @@ export default function Hero() {
         </motion.p>
         <motion.div className="hero__actions" {...fadeUp(0.44)}>
           <Link to="/read/1/1" className="btn btn--primary">
-            Читать комикс
+            Читать книгу
           </Link>
           <a href="#about" className="btn btn--ghost" onClick={scrollToAbout}>
             О проекте
