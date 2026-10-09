@@ -27,7 +27,14 @@
 
   --accent-gold-10:    rgba(216, 162, 58, 0.10);
   --accent-gold-20:    rgba(216, 162, 58, 0.20);
+  --accent-gold-30:    rgba(216, 162, 58, 0.30);
   --accent-gold-40:    rgba(216, 162, 58, 0.40);
+
+  /* ----- Скримы и свечения карточек фракций ----- */
+  --scrim-card:       linear-gradient(to top, rgba(11, 10, 16, 0.95) 0%, rgba(11, 10, 16, 0.60) 40%, transparent 100%);
+  --scrim-card-hover: linear-gradient(to top, rgba(11, 10, 16, 0.98) 0%, rgba(11, 10, 16, 0.78) 45%, rgba(11, 10, 16, 0.20) 100%);
+  --shadow-gold-glow: 0 0 20px rgba(216, 162, 58, 0.30);
+  --shadow-blood-glow: 0 0 20px rgba(140, 31, 40, 0.35);
 
   --accent-blood-06:   rgba(140, 31, 40, 0.06);
   --accent-blood-10:   rgba(140, 31, 40, 0.10);

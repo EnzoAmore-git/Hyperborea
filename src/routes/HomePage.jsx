@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import Hero from '../components/Hero.jsx';
 import About from '../components/About.jsx';
-import Gallery from '../components/Gallery.jsx';
+import Factions from '../components/Factions.jsx';
 import Team from '../components/Team.jsx';
 import Support from '../components/Support.jsx';
 import ErrorBoundary from '../components/ErrorBoundary.jsx';
@@ -27,8 +27,8 @@ export default function HomePage() {
     <div className="home-blocks">
       <Hero />
       <About />
-      <ErrorBoundary label="Галерея не загрузилась">
-        <Gallery />
+      <ErrorBoundary label="Фракции не загрузились">
+        <Factions />
       </ErrorBoundary>
       <Team />
       <Support />

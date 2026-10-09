@@ -1,6 +1,11 @@
-export default function GalleryFilter({ characters, active, onChange }) {
+export default function GalleryFilter({
+  characters,
+  active,
+  onChange,
+  ariaLabel = 'Фильтр по персонажам',
+}) {
   return (
-    <div className="g-filter" role="group" aria-label="Фильтр по персонажам">
+    <div className="g-filter" role="group" aria-label={ariaLabel}>
       <ul className="g-filter__list">
         {characters.map((c) => {
           const isActive = c.id === active;

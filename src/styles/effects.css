@@ -59,7 +59,6 @@
   .support-card--ice:hover   { box-shadow: 0 0 0 1px var(--accent-ice-40),   0 0 34px var(--accent-ice-20),   0 24px 64px rgba(0, 0, 0, 0.5); }
 
   .team-card:hover { box-shadow: 0 0 26px var(--accent-ice-20); }
-  .art-card:hover { box-shadow: 0 14px 36px var(--accent-blood-10), 0 0 26px var(--accent-blood-10); }
 }
 
 /* Редукция движения: элементы видимы сразу, дрейф зерна отключён */
@@ -231,53 +230,6 @@
     var(--accent-blood) 100%
   );
   box-shadow: 0 0 22px var(--accent-blood-20);
-}
-
-/* ----- 4. Карточки арта: золотое свечение + руны по углам + рамка-бордюр ----- */
-.art-card__caption {
-  z-index: 2;
-}
-
-.art-card::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  pointer-events: none;
-  background-image:
-    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 60'><g fill='none' stroke='%238C1F28' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'><path d='M2 8 L2 2 L8 2'/><path d='M52 2 L58 2 L58 8'/><path d='M2 52 L2 58 L8 58'/><path d='M52 58 L58 58 L58 52'/></g><g fill='none' stroke='%238C1F28' stroke-width='1' stroke-dasharray='3 3'><line x1='12' y1='2' x2='48' y2='2'/><line x1='12' y1='58' x2='48' y2='58'/><line x1='2' y1='12' x2='2' y2='48'/><line x1='58' y1='12' x2='58' y2='48'/></g></svg>"),
-    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><g fill='none' stroke='%238C1F28' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M12 2 V22 M2 12 H22 M4.55 4.55 L19.45 19.45 M19.45 4.55 L4.55 19.45'/></g></svg>"),
-    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><g fill='none' stroke='%238C1F28' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M12 2 V22 M2 12 H22 M4.55 4.55 L19.45 19.45 M19.45 4.55 L4.55 19.45'/></g></svg>"),
-    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><g fill='none' stroke='%238C1F28' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M12 2 V22 M2 12 H22 M4.55 4.55 L19.45 19.45 M19.45 4.55 L4.55 19.45'/></g></svg>"),
-    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><g fill='none' stroke='%238C1F28' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M12 2 V22 M2 12 H22 M4.55 4.55 L19.45 19.45 M19.45 4.55 L4.55 19.45'/></g></svg>");
-  background-position:
-    center,
-    top 8px left 8px,
-    top 8px right 8px,
-    bottom 8px left 8px,
-    bottom 8px right 8px;
-  background-size:
-    100% 100%,
-    18px 18px,
-    18px 18px,
-    18px 18px,
-    18px 18px;
-  background-repeat: no-repeat;
-  opacity: 0;
-  transition: opacity var(--dur-medium) var(--ease-smooth);
-}
-
-.art-card:hover::after {
-  opacity: 1;
-}
-
-@media (hover: hover) {
-  .art-card:hover {
-    box-shadow:
-      0 0 0 1px var(--accent-blood-40),
-      0 0 28px var(--accent-blood-20),
-      0 14px 36px rgba(0, 0, 0, 0.5);
-  }
 }
 
 /* ----- 5. Команда: ледяное кольцо с рунами на hover ----- */

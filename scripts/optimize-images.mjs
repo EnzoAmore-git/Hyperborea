@@ -15,13 +15,35 @@ const root = fileURLToPath(new URL('..', import.meta.url));
 const ART_DIR = join(root, 'public/images/art');
 const ART_OUT = join(ART_DIR, 'webp');
 const PAGES_DIR = join(root, 'public/pages');
+const TEAM_DIR = join(root, 'sources/Team');
+const TEAM_OUT = join(root, 'public/images/team');
 const ART_WIDTHS = [400, 800, 1200];
 const PAGE_WIDTHS = [800, 1200, 1600];
+const TEAM_WIDTHS = [176, 352];
 const ART_QUALITY = 82;
 const PAGE_QUALITY = 75;
+const TEAM_QUALITY = 82;
 const LQIP = 40;
 const ART_LIMIT = 500 * 1024;
 const PAGE_LIMIT = 800 * 1024;
+
+/** Транслитерация кириллических имён файлов в ASCII-slug. */
+const TRANSLIT = {
+  а: 'a', б: 'b', в: 'v', г: 'g', д: 'd', е: 'e', ё: 'e', ж: 'zh', з: 'z',
+  и: 'i', й: 'y', к: 'k', л: 'l', м: 'm', н: 'n', о: 'o', п: 'p', р: 'r',
+  с: 's', т: 't', у: 'u', ф: 'f', х: 'kh', ц: 'ts', ч: 'ch', ш: 'sh',
+  щ: 'shch', ъ: '', ы: 'y', ь: '', э: 'e', ю: 'yu', я: 'ya',
+};
+
+function slugify(name) {
+  return name
+    .toLowerCase()
+    .split('')
+    .map((ch) => (TRANSLIT[ch] !== undefined ? TRANSLIT[ch] : ch))
+    .join('')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+}
 
 async function listImages(dir) {
   const out = [];
@@ -75,6 +97,23 @@ async function run() {
   const arts = await listImages(ART_DIR);
   console.log(`Арты: ${arts.length} шт.`);
   await processGroup(arts, ART_OUT, ART_WIDTHS, ART_QUALITY, ART_LIMIT, 'art');
+
+  // Фото команды: sources/Team/<Имя>_<Должность>.(png|jpg) → public/images/team/
+  let teamFiles = [];
+  try {
+    teamFiles = await listImages(TEAM_DIR);
+  } catch {
+    teamFiles = [];
+  }
+  console.log(`Команда: ${teamFiles.length} фото`);
+  for (const file of teamFiles) {
+    const slug = slugify(basename(file, extname(file)));
+    for (const w of TEAM_WIDTHS) {
+      const p = join(TEAM_OUT, `${slug}-${w}.webp`);
+      const bytes = await derivative(file, p, w, TEAM_QUALITY);
+      report.push(`team ${slug}-${w}.webp  ${(bytes / 1024).toFixed(1)} KB`);
+    }
+  }
 
   const chapters = (await readdir(PAGES_DIR)).filter((n) => n.startsWith('chapter-'));
   for (const ch of chapters) {

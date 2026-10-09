@@ -9,7 +9,7 @@ import { useFocusTrap } from '../lib/focusTrap.js';
 
 const LINKS = [
   { label: 'О проекте', href: '#about' },
-  { label: 'Концепты', href: '#gallery' },
+  { label: 'Фракции', href: '#factions' },
   { label: 'Команда', href: '#team' },
   { label: 'Поддержать', href: '#support' },
 ];
