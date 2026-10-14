@@ -26,7 +26,6 @@ function placeholder(name, color) {
     <path d="M800 290 L1010 500 L800 710 L590 500 Z"/>
     <path d="M800 400 L900 500 L800 600 L700 500 Z"/>
   </g>
-  <text x="800" y="450" text-anchor="middle" dominant-baseline="middle" font-family="Georgia, 'Times New Roman', serif" font-size="76" fill="${color}">${name}</text>
 </svg>`;
   return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
 }

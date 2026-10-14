@@ -11,26 +11,26 @@ const PLATFORMS = [
   {
     id: 'boosty',
     name: 'Boosty',
-    href: 'https://boosty.to',
+    href: 'https://boosty.to/hyperborealegacy',
     tone: 'ember',
-    text: 'Ежемесячная поддержка без посредников.',
+    text: 'Эксклюзивные материалы и поддержка проекта',
     icon: boostyIcon,
   },
   {
-    id: 'patreon',
-    name: 'Patreon',
-    href: 'https://patreon.com',
-    tone: 'gold',
-    text: 'Доступ к эксклюзивным материалам и отрисовкам.',
-    icon: patreonIcon,
-  },
-  {
     id: 'telegram',
-    name: 'Телеграм-канал',
+    name: 'Телеграм',
     href: 'https://t.me/artzavtrakartiomzhukov',
     tone: 'ice',
     text: 'Подписывайтесь: наброски, новости и анонсы глав.',
     icon: telegramIcon,
+  },
+  {
+    id: 'taplink',
+    name: 'Taplink',
+    href: 'https://taplink.cc/zhukov_artiom67',
+    tone: 'gold',
+    text: 'Все доступные контакты и ресурсы студии',
+    icon: patreonIcon,
   },
 ];
 

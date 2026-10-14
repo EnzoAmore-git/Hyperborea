@@ -70,20 +70,24 @@ export default function FactionSlider({ faction, index, onIndexChange }) {
       <ul className="faction-slider__track" ref={trackRef} onScroll={handleScroll}>
         {slides.map((image, i) => (
           <li className="faction-slide" key={image.id}>
-            <img
-              className="faction-slide__img"
-              src={image.src || image.fallback}
-              alt={image.alt}
-              loading={i === 0 ? 'eager' : 'lazy'}
-              decoding="async"
-            />
+            <div className="faction-slide__wrapper">
+              <img
+                className="faction-slide__img"
+                src={image.src || image.fallback}
+                alt={image.alt}
+                loading={i === 0 ? 'eager' : 'lazy'}
+                decoding="async"
+              />
+            </div>
           </li>
         ))}
       </ul>
 
       <div className="faction-slider__overlay">
         <div className="faction-slider__caption">
-          <h3 className="faction-slider__name">{faction.name}</h3>
+          <h3 className="faction-slider__name" style={{ color: faction.color }}>
+            {faction.name}
+          </h3>
           <p className="faction-slider__desc">{faction.description}</p>
 
           <div className="faction-slider__dots">

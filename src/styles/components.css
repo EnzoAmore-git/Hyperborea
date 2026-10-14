@@ -1019,56 +1019,52 @@ input[type='radio'] {
   scroll-snap-align: start;
 }
 
+.faction-slide__wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
 .faction-slide__img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   object-position: center;
+  display: block;
+}
+
+.faction-slide__placeholder-text {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 2rem;
+  
+  font-family: Georgia, 'Times New Roman', serif;
+  color: inherit; /* Будет наследоваться из родителя или задаваться через JS */
+  font-size: clamp(2rem, 6vw, 4.75rem);
+  line-height: 1.1;
+  text-transform: none;
+  pointer-events: none;
+  
+  /* Чтобы цвет текста соответствовал цвету заглушки */
+  color: var(--placeholder-color, var(--accent-blood));
+}
+
+@media (max-width: 767px) {
+  .faction-slide__placeholder-text {
+    font-size: clamp(1.5rem, 8vw, 2.5rem);
+    white-space: normal;
+    max-width: 80%;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .faction-slider__track {
     scroll-behavior: auto;
   }
-}
-
-/* ----- Затемнение + текст снизу ----- */
-.faction-slider__overlay {
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  z-index: 3;
-  padding: clamp(2rem, 6vw, 4.5rem) 0 clamp(1.5rem, 4vw, 3rem);
-  background: var(--scrim-card);
-  pointer-events: none;
-}
-
-.faction-slider__caption {
-  max-width: var(--container);
-  margin-inline: auto;
-  padding-inline: var(--gutter-mobile);
-}
-
-.faction-slider__name {
-  margin: 0 0 var(--space-1);
-  font-family: var(--font-display);
-  font-size: var(--fs-h2);
-  line-height: 1.1;
-  color: var(--accent-blood);
-}
-
-.faction-slider__desc {
-  display: -webkit-box;
-  max-width: 62ch;
-  margin: 0;
-  overflow: hidden;
-  color: var(--text-primary);
-  font-size: var(--fs-body);
-  line-height: 1.55;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 3;
-  line-clamp: 3;
 }
 
 /* ----- Стрелки ----- */
@@ -1114,6 +1110,59 @@ input[type='radio'] {
   border-color: var(--accent-blood-40);
   box-shadow: var(--shadow-blood-glow);
   transform: translateY(-50%) scale(1.12);
+}
+
+/* ----- Затемнение + текст снизу ----- */
+.faction-slider__overlay {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 3;
+  padding: clamp(2rem, 6vw, 4.5rem) 0 clamp(1.5rem, 4vw, 3rem);
+  background: var(--scrim-card);
+  pointer-events: none;
+}
+
+@media (max-width: 1023px) {
+  .faction-slider__overlay {
+    position: relative;
+    background: transparent;
+    padding: var(--space-4) 0;
+    z-index: 1;
+  }
+}
+
+.faction-slider__caption {
+  max-width: var(--container);
+  margin-inline: auto;
+  padding-inline: var(--gutter-mobile);
+}
+
+.faction-slider__name {
+  margin: 0 0 var(--space-2);
+  font-family: var(--font-display);
+  font-size: clamp(1.75rem, 5vw, var(--fs-h2));
+  line-height: 1.1;
+  text-align: center;
+  text-transform: none;
+}
+
+.faction-slider__desc {
+  max-width: 62ch;
+  margin: 0 auto;
+  color: var(--text-primary);
+  font-size: var(--fs-body);
+  line-height: 1.55;
+  text-align: center;
+}
+
+.faction-slider__dots {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-1);
+  margin-top: var(--space-3);
+  pointer-events: auto;
 }
 
 .faction-slider__arrow:focus-visible {
