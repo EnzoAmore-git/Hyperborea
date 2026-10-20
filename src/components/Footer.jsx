@@ -1,10 +1,3 @@
-const FOOTER_LINKS = [
-  { label: 'О проекте', href: '#about' },
-  { label: 'Фракции', href: '#factions' },
-  { label: 'Команда', href: '#team' },
-  { label: 'Поддержать', href: '#support' },
-];
-
 export default function Footer() {
   const year = new Date().getFullYear();
 
@@ -17,14 +10,6 @@ export default function Footer() {
           </span>
           <span className="meta">Гиперборея</span>
         </div>
-
-        <nav className="site-footer__links" aria-label="Навигация в футере">
-          {FOOTER_LINKS.map((l) => (
-            <a key={l.href} href={l.href}>
-              {l.label}
-            </a>
-          ))}
-        </nav>
 
         <p className="site-footer__copy meta">
           © {year} Гиперборея · Все права защищены

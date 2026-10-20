@@ -19,7 +19,7 @@
 |---|---|---|
 | Inter (400/500/600) + Cormorant Garamond (500/600/700) | OK | 18 @font-face: 2 семейства × 3 начертания × 2 подмножества (latin, cyrillic) |
 | `font-display: swap` | OK | для всех начертаний |
-| Подгрузка через `BASE_URL` | OK | `src/lib/fonts.js` инжектит @font-face на рантайме с `import.meta.env.BASE_URL`; корректно работает и в корне, и в подпапке (`/webtoon-reader/`) |
+| Подгрузка через `BASE_URL` | OK | `src/lib/fonts.js` инжектит @font-face на рантайме с `import.meta.env.BASE_URL`; корректно работает и в корне, и в подпапке (`/Hyperborea/`) |
 | Ленивая подгрузка | OK | подмножества и начертания доставляются только по мере использования |
 
 ## 3. Performance (design.md: Performance)
@@ -71,9 +71,9 @@ DoD: Desktop-Perf ≥90 **(выполнено)**; Mobile-Perf ≥80 — лока
 ## 6. Деплой-артефакт (7.3)
 
 - Сборка: `npm run build` = `vite build && node scripts/inline-css.mjs`.
-- Subpath-хостинг: собранный `dist` с `VITE_BASE_PATH='/webtoon-reader'` отдан через статик-сервер на `:<port>/webtoon-reader/…`; `check-subpath.mjs` → **ALL PASS**:
-  - 200 на `/webtoon-reader/`, корректные asset-url в HTML (`/webtoon-reader/assets/…`);
-  - @font-face указывают на `/webtoon-reader/fonts/…` (10 woff2 → 200);
+- Subpath-хостинг: собранный `dist` с `VITE_BASE_PATH='/Hyperborea'` отдан через статик-сервер на `:<port>/Hyperborea/…`; `check-subpath.mjs` → **ALL PASS**:
+  - 200 на `/Hyperborea/`, корректные asset-url в HTML (`/Hyperborea/assets/…`);
+  - @font-face указывают на `/Hyperborea/fonts/…` (10 woff2 → 200);
   - арты и страницы читалки открываются из подпапки;
   - 0 запросов с ошибками, 0 JS-исключений при headless-проходе.
 - CI: `.github/workflows/deploy.yml` — `VITE_BASE_PATH=/<repo>`, `npm ci`, `optimize:images`, build, `cp 404.html`, deploy-pages.

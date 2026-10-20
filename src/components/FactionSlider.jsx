@@ -67,21 +67,36 @@ export default function FactionSlider({ faction, index, onIndexChange }) {
       tabIndex={0}
       onKeyDown={handleKeyDown}
     >
-      <ul className="faction-slider__track" ref={trackRef} onScroll={handleScroll}>
-        {slides.map((image, i) => (
-          <li className="faction-slide" key={image.id}>
-            <div className="faction-slide__wrapper">
-              <img
-                className="faction-slide__img"
-                src={image.src || image.fallback}
-                alt={image.alt}
-                loading={i === 0 ? 'eager' : 'lazy'}
-                decoding="async"
-              />
-            </div>
-          </li>
-        ))}
-      </ul>
+      <div className="faction-slider__media">
+        <ul className="faction-slider__track" ref={trackRef} onScroll={handleScroll}>
+          {slides.map((image, i) => (
+            <li className="faction-slide" key={image.id}>
+              <div className="faction-slide__wrapper">
+                <img
+                  className="faction-slide__img"
+                  src={image.src || image.fallback}
+                  alt={image.alt}
+                  loading={i === 0 ? 'eager' : 'lazy'}
+                  decoding="async"
+                />
+              </div>
+            </li>
+          ))}
+        </ul>
+
+        <div className="faction-slider__dots">
+          {slides.map((image, i) => (
+            <button
+              key={image.id}
+              type="button"
+              className={`faction-slider__dot${i === index ? ' is-active' : ''}`}
+              aria-label={`Изображение ${i + 1} из ${count}`}
+              aria-current={i === index ? 'true' : undefined}
+              onClick={() => onIndexChange(i)}
+            />
+          ))}
+        </div>
+      </div>
 
       <div className="faction-slider__overlay">
         <div className="faction-slider__caption">
@@ -89,19 +104,6 @@ export default function FactionSlider({ faction, index, onIndexChange }) {
             {faction.name}
           </h3>
           <p className="faction-slider__desc">{faction.description}</p>
-
-          <div className="faction-slider__dots">
-            {slides.map((image, i) => (
-              <button
-                key={image.id}
-                type="button"
-                className={`faction-slider__dot${i === index ? ' is-active' : ''}`}
-                aria-label={`Изображение ${i + 1} из ${count}`}
-                aria-current={i === index ? 'true' : undefined}
-                onClick={() => onIndexChange(i)}
-              />
-            ))}
-          </div>
         </div>
       </div>
 

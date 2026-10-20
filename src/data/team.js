@@ -27,6 +27,18 @@ export const team = [
     initials: 'ДЗ',
     photo: '/images/team/denis-zakharenkov-ai-i-it-soprovozhdenie',
   },
-  { id: 'eismont', name: 'Герман Эйсмонт', role: 'Художник', initials: 'ГЭ' },
-  { id: 'alina', name: 'Алина', role: 'Маркетинг', initials: 'А' },
+  {
+    id: 'eismont',
+    name: 'Герман Эйсмонт',
+    role: 'Художник',
+    initials: 'ГЭ',
+    photo: '/images/team/german-eysmont-khudozhnik',
+  },
+  {
+    id: 'yaroshenko',
+    name: 'Арина Ярошенко',
+    role: 'Ассистент по маркетингу',
+    initials: 'АЯ',
+    photo: '/images/team/arina-yaroshenko-assistent-po-marketingu',
+  },
 ];

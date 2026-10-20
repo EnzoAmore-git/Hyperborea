@@ -452,24 +452,6 @@ input[type='radio'] {
   line-height: 1;
 }
 
-.site-footer__links {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: var(--space-2) var(--space-4);
-}
-
-.site-footer__links a {
-  color: var(--text-secondary);
-  font-size: var(--fs-small);
-  text-decoration: none;
-  transition: color var(--dur-fast) var(--ease-standard);
-}
-
-.site-footer__links a:hover {
-  color: var(--accent-blood);
-}
-
 .site-footer__copy {
   color: var(--text-muted);
 }
@@ -514,18 +496,13 @@ input[type='radio'] {
 
   .site-footer__inner {
     display: grid;
-    grid-template-columns: 1fr auto 1fr;
+    grid-template-columns: 1fr auto;
     align-items: center;
     gap: var(--space-3) var(--space-6);
   }
 
   .site-footer__brand {
     justify-self: start;
-  }
-
-  .site-footer__links {
-    justify-self: center;
-    flex-wrap: nowrap;
   }
 
   .site-footer__copy {
@@ -994,6 +971,11 @@ input[type='radio'] {
   outline: none;
 }
 
+/* Обёртка вокруг ленты — точка отсчёта для пейджера поверх картинки */
+.faction-slider__media {
+  position: relative;
+}
+
 .faction-slider__track {
   display: flex;
   height: clamp(440px, 78vh, 860px);
@@ -1119,7 +1101,7 @@ input[type='radio'] {
   bottom: 0;
   left: 0;
   z-index: 3;
-  padding: clamp(2rem, 6vw, 4.5rem) 0 clamp(1.5rem, 4vw, 3rem);
+  padding: clamp(2rem, 6vw, 4.5rem) 0 clamp(2.75rem, 6vw, 4rem);
   background: var(--scrim-card);
   pointer-events: none;
 }
@@ -1158,10 +1140,14 @@ input[type='radio'] {
 }
 
 .faction-slider__dots {
+  position: absolute;
+  left: 50%;
+  bottom: clamp(1rem, 2.5vw, 1.75rem);
+  z-index: 4;
   display: flex;
   justify-content: center;
   gap: var(--space-1);
-  margin-top: var(--space-3);
+  transform: translateX(-50%);
   pointer-events: auto;
 }
 
@@ -1176,14 +1162,6 @@ input[type='radio'] {
 }
 
 /* ----- Точки-индикаторы ----- */
-.faction-slider__dots {
-  display: flex;
-  justify-content: center;
-  gap: var(--space-1);
-  margin-top: var(--space-3);
-  pointer-events: auto;
-}
-
 .faction-slider__dot {
   width: 28px;
   height: 3px;

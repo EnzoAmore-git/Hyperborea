@@ -28,3 +28,5 @@ desktop.ini
 # Внутренние материалы (для личного пользования, не в репозиторий)
 /sources/*.pdf
 /sources/*.txt
+/sources/Team/
+/sources/Глава_*/

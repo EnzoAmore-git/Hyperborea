@@ -5,7 +5,7 @@ import { VitePWA } from 'vite-plugin-pwa';
 const basePath = process.env.VITE_BASE_PATH;
 
 // Локально — корень '/'. На GitHub Pages — абсолютный путь подпапки репозитория
-// (задаётся в workflow переменной VITE_BASE_PATH, например '/webtoon-reader').
+// (задаётся в workflow переменной VITE_BASE_PATH, например '/Hyperborea').
 const base = basePath ? `/${basePath.replace(/^\/+|\/+$/g, '')}/` : '/';
 
 export default defineConfig({
