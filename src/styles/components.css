@@ -2348,3 +2348,121 @@ overflow: hidden;
   margin: 0;
   line-height: normal;
 }
+
+/* ============================================================
+   ЧИТАЛКА — ФИНАЛЬНЫЕ ПРАВКИ (панель глав + ширина строки)
+   ============================================================ */
+
+/* --- 1. Панель глав: поверх всех контролов читалки ---
+   Раньше z-index: 3 уступал боковым панелям (6) и верхней/нижней
+   панелям (8), поэтому «щёки» перекрывали карточку, а на телефоне
+   нижняя панель перехватывала клики. */
+.reader__panel {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(12px, 3vw, 32px);
+  padding-bottom: max(clamp(12px, 3vw, 32px), env(safe-area-inset-bottom));
+  overflow: hidden;
+  background: rgba(7, 6, 10, 0.92);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.reader__panel-card {
+  display: flex;
+  flex-direction: column;
+  width: 460px;
+  max-width: 100%;
+  max-height: 100%;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  overflow: hidden;
+  border: 1px solid var(--line-subtle);
+  border-radius: var(--radius-lg);
+  background: var(--bg-raised);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5);
+}
+
+.reader__panel-card > .reader__meta,
+.reader__panel-card > .reader__resume,
+.reader__panel-card > .btn {
+  flex: 0 0 auto;
+}
+
+/* Список глав — единственная скроллируемая область карточки:
+   заголовок, «Продолжить чтение» и «Закрыть» всегда на экране. */
+.reader__chapters {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  touch-action: pan-y;
+  -webkit-overflow-scrolling: touch;
+  padding-right: 4px;
+  margin-right: -4px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--accent-blood-40) transparent;
+}
+
+.reader__chapters::-webkit-scrollbar {
+  width: 4px;
+}
+
+.reader__chapters::-webkit-scrollbar-thumb {
+  border-radius: var(--radius-full);
+  background: var(--accent-blood-40);
+}
+
+.reader__chapters::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Десктоп: у окна глав строго фиксированная ширина. */
+@media (min-width: 1024px) {
+  .reader__panel-card {
+    width: 520px;
+    max-width: 520px;
+  }
+}
+
+@media (max-width: 480px) {
+  .reader__panel-card {
+    padding: var(--space-3);
+  }
+}
+
+/* --- 2. Комфортная длина строки на десктопе ---
+   Ориентир: 50–75 символов в строке, ~66 — оптимум
+   (Nielsen Norman Group / Baymard, 50–75 CPL; Bringhurst, 66).
+   Колонка 640–740px, текст ограничен 82ch (с внутренними полями
+   это ~72ch чистого набора). */
+@media (min-width: 1024px) {
+  .reader__scroll {
+    flex: 0 1 clamp(640px, 52vw, 740px);
+  }
+
+  .reader__zone--prev {
+    left: calc(50% - clamp(640px, 52vw, 740px) / 2);
+    right: auto;
+  }
+
+  .reader__zone--next {
+    right: calc(50% - clamp(640px, 52vw, 740px) / 2);
+    left: auto;
+  }
+}
+
+.reader__text {
+  max-width: 82ch;
+}
+
+/* Мобильная читалка: текст не должен уходить под sticky-шапку. */
+@media (max-width: 1023px) {
+  .reader__text {
+    padding-top: calc(64px + var(--space-2));
+  }
+}

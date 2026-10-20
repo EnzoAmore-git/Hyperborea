@@ -20,6 +20,14 @@ import ReaderError from './ReaderError.jsx';
 const POSITION_KEY = 'hyperborea:reading-position';
 const HINT_DURATION = 3400;
 const TOP_OFFSET = 96; // высота подсказки активной страницы от верха вьюпорта
+const PANEL_INERT_SELECTORS = [
+  '.navbar',
+  '.site-footer',
+  '.reader__scroll',
+  '.reader__side',
+  '.reader__bottom',
+  '.reader__hint',
+];
 
 const reduceMotion = () =>
   typeof window !== 'undefined' &&
@@ -75,15 +83,17 @@ export default function ComicReader() {
 
   const ch = chapterId ? getChapter(chapterId) : null;
 
-  // «Продолжить чтение»: сохранённая позиция, если она отличается от URL
+  // «Продолжить чтение»: позиция из localStorage, если она отличается
+  // от текущей страницы. Пересчитываем при открытии панели, чтобы не
+  // показывать устаревшую закладку после чтения в этой же сессии.
   const resumePos = useMemo(() => {
+    if (!panelOpen) return null;
     const saved = readSavedPosition();
     if (!saved || !getChapter(saved.ch)) return null;
-    return saved.ch === params.chapterId && Number(saved.pg) === Number(params.pageNum)
-      ? null
-      : saved;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    const sameChapter = String(saved.ch) === String(chapterId);
+    const samePage = Number(saved.pg) === Number(pageNum);
+    return sameChapter && samePage ? null : saved;
+  }, [panelOpen, chapterId, pageNum]);
 
   const chapterIdx = ch ? chapters.findIndex((c) => c.id === ch.id) + 1 : 0;
 
@@ -142,7 +152,7 @@ export default function ComicReader() {
   };
 
   /* ---------- смена главы/страницы ---------- */
-  const openChapter = (id, num) => {
+  const openChapter = (id, num, { persist = true, syncUrl = true } = {}) => {
     const target = getChapter(id);
     if (!target) return;
     const p = clampNum(num, target);
@@ -150,7 +160,10 @@ export default function ComicReader() {
     lastActiveRef.current = p;
     setPageNum(p);
     setErrPages({});
-    savePosition(id, p);
+    // При входе по URL не перезаписываем закладку стартовой страницей:
+    // иначе «Продолжить чтение» теряется, не успев показаться.
+    if (persist) savePosition(id, p);
+    if (syncUrl) navigate(`/read/${id}/${p}`, { replace: true });
     pendingScrollRef.current = p;
     setNavTick((t) => t + 1);
     setHintVisible(true);
@@ -295,7 +308,7 @@ export default function ComicReader() {
     if (id !== chapterId) openChapter(id, 1);
   };
 
-  /* ---------- URL-параметры → открытие главы ---------- */
+  /* ---------- URL-параметры → открытие главы/страницы ---------- */
   useEffect(() => {
     const target = getChapter(params.chapterId);
     if (!target) {
@@ -303,11 +316,12 @@ export default function ComicReader() {
       return;
     }
     setFatal(false);
-    if (target.id !== chapterId) {
-      openChapter(target.id, params.pageNum);
+    const urlPage = clampNum(params.pageNum, target);
+    if (target.id !== chapterId || urlPage !== pageNum) {
+      openChapter(target.id, urlPage, { persist: false, syncUrl: false });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [params.chapterId]);
+  }, [params.chapterId, params.pageNum]);
 
   /* ---------- клавиатура (DoD 4.7) ---------- */
   useEffect(() => {
@@ -374,7 +388,7 @@ export default function ComicReader() {
   useFocusTrap({
     active: panelOpen,
     rootRef: panelRef,
-    inertSelectors: ['.navbar', '.site-footer', '.reader__scroll', '.reader__side'],
+    inertSelectors: PANEL_INERT_SELECTORS,
   });
 
   /* ---------- загрузка/ошибки страниц ---------- */
@@ -698,6 +712,9 @@ export default function ComicReader() {
           ref={panelRef}
           tabIndex={-1}
           data-lenis-prevent
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setPanelOpen(false);
+          }}
         >
           <div className="reader__panel-card">
             <p className="reader__meta">Оглавление</p>
