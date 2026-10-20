@@ -8,7 +8,11 @@
  * Главы 1–3 начинаются с текста (арты вставлены по меткам); главы 4–5 начинаются
  * с картинки; текст вставляется только по логическим границам абзацев
  * (ни одна фраза не обрывается посередине).
+ * - Главы 6–10 — только текст из полной рукописи «Hyperborea.docx» (без картинок),
+ *   см. src/data/book.js.
  */
+
+import { BOOK_CHAPTERS } from './book.js';
 
 const asset = (p) => `${import.meta.env.BASE_URL}${p.replace(/^\/+/, '')}`;
 
@@ -1047,6 +1051,14 @@ const CHAPTER_1 = [
 /** Титульная страница главы: отдельная полноэкранная страница читалки. */
 const chapterTitlePage = { type: 'chapter' };
 
+/** Главы 6–10: титул + текстовые страницы, без иллюстраций. */
+const bookChapter = ({ id, subtitle, blocks }) => ({
+  id,
+  title: `Глава ${id}`,
+  subtitle,
+  pages: withNum([chapterTitlePage, ...blocks.map(textPage)]),
+});
+
 export const chapters = [
   {
     id: '1',
@@ -1078,6 +1090,7 @@ export const chapters = [
     subtitle: 'Подземный мир',
     pages: withNum([chapterTitlePage, ...merge(RANDOM_POOL.slice(7, 15), TEXTS['5'], 'alt')]),
   },
+  ...BOOK_CHAPTERS.map(bookChapter),
 ];
 
 export const getChapter = (id) => chapters.find((c) => c.id === String(id)) ?? null;
