@@ -145,6 +145,10 @@ export default function Navbar() {
           ))}
         </ul>
 
+        <Link to="/read/1/1" className="btn btn--primary navbar__cta">
+          Читать книгу
+        </Link>
+
         <button
           type="button"
           className={`navbar__burger${open ? ' is-open' : ''}`}
@@ -184,36 +188,45 @@ export default function Navbar() {
                   <path d="M6 6 L18 18 M18 6 L6 18" />
                 </svg>
               </button>
-              <ul className="mob-menu__list container">
-              {LINKS.map((l, i) => (
-                <motion.li
-                  key={l.href}
-                  initial={{ opacity: 0, x: 32 }}
-                  animate={{
-                    opacity: 1,
-                    x: 0,
-                    transition: {
-                      delay: 0.05 * (i + 1),
-                      duration: DURATION.medium / 1000,
-                      ease: EASING.smooth,
-                    },
-                  }}
+              <div className="mob-menu__body container">
+                <ul className="mob-menu__list">
+                  {LINKS.map((l, i) => (
+                    <motion.li
+                      key={l.href}
+                      initial={{ opacity: 0, x: 32 }}
+                      animate={{
+                        opacity: 1,
+                        x: 0,
+                        transition: {
+                          delay: 0.05 * (i + 1),
+                          duration: DURATION.medium / 1000,
+                          ease: EASING.smooth,
+                        },
+                      }}
+                    >
+                      <a
+                        href={l.href}
+                        tabIndex={0}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          setOpen(false);
+                          smoothScrollTo(l.href);
+                        }}
+                      >
+                        <span className="mob-menu__num">0{i + 1}</span>
+                        {l.label}
+                      </a>
+                    </motion.li>
+                  ))}
+                </ul>
+                <Link
+                  to="/read/1/1"
+                  className="btn btn--primary mob-menu__cta"
+                  onClick={() => setOpen(false)}
                 >
-                  <a
-                    href={l.href}
-                    tabIndex={0}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      setOpen(false);
-                      smoothScrollTo(l.href);
-                    }}
-                  >
-                    <span className="mob-menu__num">0{i + 1}</span>
-                    {l.label}
-                  </a>
-                </motion.li>
-              ))}
-            </ul>
+                  Читать книгу
+                </Link>
+              </div>
           </motion.div>
         )}
       </AnimatePresence>,
