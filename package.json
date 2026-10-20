@@ -7,6 +7,8 @@
     "dev": "vite",
     "build": "vite build && node scripts/inline-css.mjs",
     "preview": "vite preview",
+    "deploy": "node scripts/deploy.mjs",
+    "deploy:dry": "node scripts/deploy.mjs --dry-run",
     "optimize:images": "node scripts/optimize-images.mjs"
   },
   "keywords": [],
@@ -15,7 +17,9 @@
   "type": "commonjs",
   "devDependencies": {
     "@vitejs/plugin-react": "^6.1.1",
+    "basic-ftp": "^6.2.3",
     "sharp": "^0.35.4",
+    "ssh2-sftp-client": "^12.1.1",
     "vite": "^8.2.2",
     "vite-plugin-pwa": "^1.3.0"
   },

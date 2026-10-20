@@ -18,7 +18,30 @@ npm run preview # проверка собранного сайта
 ```
 
 ## Деплой
-Статический сайт на GitHub Pages: push в ветку `main` автоматически собирает и публикует сайт через GitHub Actions (см. `.github/workflows/deploy.yml`).
+
+### Тестовый стенд — GitHub Pages
+Push в `main` автоматически собирает и публикует сайт через GitHub Actions (см. `.github/workflows/deploy.yml`). Сайт живёт в подпапке `/Hyperborea`.
+
+### Production — hyperborea-legends.ru
+Production-сборка собирается локально и заливается на виртуальный хостинг по SFTP/FTP. GitHub Pages остаётся тестовым стендом.
+
+1. Скопируй шаблон и заполни доступы:
+   ```bash
+   copy .env.deploy.example .env.deploy   # Windows
+   cp .env.deploy.example .env.deploy     # macOS/Linux
+   ```
+2. Проверь, что будет залито (сборка без соединения с хостингом):
+   ```bash
+   npm run deploy:dry
+   ```
+3. Опубликуй:
+   ```bash
+   npm run deploy
+   ```
+
+Скрипт собирает `dist/` с `base = /`, добавляет `deploy/.htaccess` (SPA-фолбэк и кеш-заголовки) и заливает только изменившиеся файлы. Манифест `.deploy-manifest.json` хранится на хостинге: по нему удаляются старые хешированные ассеты, посторонние файлы не трогаются.
+
+`.env.deploy` в git не попадает. После первого деплоя привяжи домен `hyperborea-legends.ru` к каталогу сайта в панели хостинга и выпусти SSL-сертификат Let's Encrypt. DNS: A-запись `@` → IP хостинга, `www` → CNAME на `hyperborea-legends.ru` (или A-запись на тот же IP).
 
 ## Структура
 - `src/` — приложение (компоненты, стили, анимации)

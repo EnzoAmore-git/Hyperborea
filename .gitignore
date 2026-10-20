@@ -6,6 +6,7 @@ dist/
 .env
 .env.*
 !.env.example
+!.env.deploy.example
 
 # Логи и кэш
 *.log
@@ -28,5 +29,6 @@ desktop.ini
 # Внутренние материалы (для личного пользования, не в репозиторий)
 /sources/*.pdf
 /sources/*.txt
+/sources/*.docx
 /sources/Team/
 /sources/Глава_*/
