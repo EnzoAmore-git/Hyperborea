@@ -68,9 +68,9 @@ export default function AgeGate() {
 
         {!denied ? (
           <>
-            <div className="age-gate__badge">
+            <div className="age-disclaimer age-gate__badge">
               <span className="age-disclaimer__badge">18+</span>
-              <span className="age-gate__badge-text meta">Для лиц старше 18 лет</span>
+              <span className="age-disclaimer__text meta">Для лиц старше 18 лет</span>
             </div>
             <div className="age-gate__body">
               <p className="age-gate__text">

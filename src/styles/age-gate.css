@@ -1,17 +1,218 @@
-.age-gate { position: fixed; inset: 0; z-index: var(--z-modal, 600); display: grid; place-items: center; padding: clamp(var(--space-3), 4vw, var(--space-6)); }
-.age-gate__backdrop { position: absolute; inset: 0; background: radial-gradient(1200px 720px at 50% 10%, rgba(18, 16, 26, 0.28) 0%, rgba(11, 10, 16, 0.96) 80%), radial-gradient(640px 420px at 50% 0%, color-mix(in srgb, var(--accent-blood) 16%, transparent), transparent 70%), var(--bg-deep); backdrop-filter: blur(8px) saturate(1.1); opacity: 0.98; }
-.age-gate__modal { position: relative; display: flex; flex-direction: column; gap: clamp(var(--space-3), 2.5vw, var(--space-5)); width: min(92vw, 720px); padding: clamp(var(--space-4), 4vw, var(--space-6)); border: 1px solid var(--line-subtle); border-radius: var(--radius-lg); background: linear-gradient(180deg, color-mix(in srgb, var(--bg-raised) 92%, transparent) 0%, color-mix(in srgb, var(--bg-deep) 96%, transparent) 100%), linear-gradient(180deg, rgba(18, 16, 26, 0.96), rgba(11, 10, 16, 0.98)); box-shadow: 0 0 0 1px rgba(216, 162, 58, 0.08) inset, 0 60px 140px -60px rgba(140, 31, 40, 0.45), 0 40px 120px -60px rgba(0, 0, 0, 0.6); text-align: center; isolation: isolate; }
-.age-gate__modal::before { content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; background-image: radial-gradient(520px 240px at 50% 0%, color-mix(in srgb, var(--accent-gold) 18%, transparent), transparent 70%), url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 60'><g fill='none' stroke='%238C1F28' stroke-opacity='0.05'><path d='M30 4 L56 30 L30 56 L4 30 Z' stroke-width='1.4'/><path d='M30 14 V46 M14 30 H46' stroke-width='1'/><path d='M2 2 L8 2 L8 8 M58 2 L58 8 L52 8 M2 58 L2 52 L8 52 M58 58 L52 58 L52 52' stroke-width='1'/></g><circle cx='30' cy='30' r='2.4' fill='%238C1F28' fill-opacity='0.05'/></svg>"); background-repeat: no-repeat; background-position: center top, center; background-size: 100% 60%, 120% auto; mix-blend-mode: overlay; opacity: 0.5; }
-.age-gate__modal::after { content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 800'><g fill='none' stroke='%238C1F28' stroke-linecap='round' stroke-linejoin='round'><circle cx='400' cy='400' r='392' stroke-width='2'/><circle cx='400' cy='400' r='336' stroke-width='2' stroke-dasharray='3 27'/><circle cx='400' cy='400' r='150' stroke-width='8'/><circle cx='400' cy='400' r='118' stroke-width='2'/><path d='M400 22 V280 M400 520 V778 M22 400 H280 M520 400 H778' stroke-width='6'/><path d='M133 133 L303 303 M497 497 L667 667 M667 133 L497 303 M303 497 L133 667' stroke-width='6'/></g><g fill='%238C1F28'><circle cx='400' cy='20' r='6'/><circle cx='400' cy='780' r='6'/><circle cx='20' cy='400' r='6'/><circle cx='780' cy='400' r='6'/><circle cx='131' cy='131' r='6'/><circle cx='669' cy='669' r='6'/><circle cx='669' cy='131' r='6'/><circle cx='131' cy='669' r='6'/></g></svg>"); background-repeat: no-repeat; background-position: center -80px; background-size: clamp(520px, 80vw, 760px) auto; opacity: 0.08; mix-blend-mode: overlay; transform: rotate(180deg); }
-.age-gate__header { position: relative; display: inline-flex; flex-direction: column; align-items: center; gap: clamp(var(--space-2), 2vw, var(--space-3)); margin-inline: auto; }
-.age-gate__rune { color: var(--accent-blood); font-size: clamp(var(--fs-h2), 6vw, var(--fs-h1)); line-height: 1; text-shadow: 0 18px 48px var(--accent-blood-20); }
-.age-gate__title { font-family: var(--font-display); font-size: clamp(var(--fs-h2), 5vw, var(--fs-display)); letter-spacing: 0.08em; text-transform: uppercase; line-height: 1.05; }
-.age-gate__badge { position: relative; display: inline-flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: var(--space-2) var(--space-3); padding: clamp(8px, 2vw, 10px) clamp(var(--space-3), 3vw, var(--space-4)); margin-inline: auto; border: 1px solid var(--accent-blood-40); border-radius: var(--radius-pill); background: radial-gradient(120% 120% at 50% 0%, color-mix(in srgb, var(--accent-blood) 20%, transparent), transparent 70%), color-mix(in srgb, var(--bg-deep) 88%, transparent); box-shadow: 0 20px 60px -40px var(--accent-blood-40); }
-.age-gate__badge-text { color: var(--text-secondary); }
-.age-gate__body { position: relative; display: flex; flex-direction: column; gap: clamp(var(--space-2), 2vw, var(--space-3)); max-width: min(68vw, 560px); margin-inline: auto; }
-.age-gate__body--denied { gap: var(--space-2); }
-.age-gate__text { margin: 0; color: var(--text-secondary); font-size: clamp(var(--fs-base), 2.2vw, var(--fs-lg)); line-height: 1.7; }
-.age-gate__text--strong { color: var(--text-primary); font-family: var(--font-display); font-size: clamp(var(--fs-h3), 3.5vw, var(--fs-h2)); letter-spacing: 0.08em; text-transform: uppercase; }
-.age-gate__actions { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: clamp(var(--space-2), 2vw, var(--space-3)); }
-@media (min-width: 768px){ .age-gate__actions { flex-direction: row; flex-wrap: wrap; } }
-.age-gate__btn { min-width: clamp(220px, 40vw, 280px); justify-content: center; }
+/* Модальное окно подтверждения возраста 18+.
+   Вертикальный ритм: заголовок → бедж → текст → разделитель → кнопки.
+   Все отступы — на токенах --space-*, без «магических» значений. */
+
+.age-gate {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-modal, 600);
+  display: grid;
+  place-items: center;
+  padding: clamp(var(--space-3), 4vw, var(--space-6));
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.age-gate__backdrop {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(1200px 720px at 50% 10%, rgba(18, 16, 26, 0.28) 0%, rgba(11, 10, 16, 0.96) 80%),
+    radial-gradient(640px 420px at 50% 0%, var(--accent-blood-15), transparent 70%),
+    var(--bg-deep);
+  backdrop-filter: blur(8px) saturate(1.1);
+  opacity: 0.98;
+}
+
+.age-gate__modal {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(var(--space-3), 3vw, var(--space-6));
+  width: min(100%, 760px);
+  max-height: min(90svh, 860px);
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: clamp(var(--space-4), 5vw, var(--space-8));
+  border: 1px solid var(--line-subtle);
+  border-radius: var(--radius-lg);
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--bg-raised) 92%, transparent) 0%,
+      color-mix(in srgb, var(--bg-deep) 96%, transparent) 100%
+    ),
+    linear-gradient(180deg, rgba(18, 16, 26, 0.96), rgba(11, 10, 16, 0.98));
+  box-shadow:
+    0 0 0 1px rgba(216, 162, 58, 0.08) inset,
+    0 60px 140px -60px var(--accent-blood-40),
+    0 40px 120px -60px rgba(0, 0, 0, 0.6);
+  text-align: center;
+  isolation: isolate;
+}
+
+.age-gate__modal::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background-image:
+    radial-gradient(520px 240px at 50% 0%, var(--accent-gold-20), transparent 70%),
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 60'><g fill='none' stroke='%238C1F28' stroke-opacity='0.05'><path d='M30 4 L56 30 L30 56 L4 30 Z' stroke-width='1.4'/><path d='M30 14 V46 M14 30 H46' stroke-width='1'/><path d='M2 2 L8 2 L8 8 M58 2 L58 8 L52 8 M2 58 L2 52 L8 52 M58 58 L52 58 L52 52' stroke-width='1'/></g><circle cx='30' cy='30' r='2.4' fill='%238C1F28' fill-opacity='0.05'/></svg>");
+  background-repeat: no-repeat;
+  background-position: center top, center;
+  background-size: 100% 60%, 120% auto;
+  mix-blend-mode: overlay;
+  opacity: 0.5;
+}
+
+.age-gate__modal::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 800'><g fill='none' stroke='%238C1F28' stroke-linecap='round' stroke-linejoin='round'><circle cx='400' cy='400' r='392' stroke-width='2'/><circle cx='400' cy='400' r='336' stroke-width='2' stroke-dasharray='3 27'/><circle cx='400' cy='400' r='150' stroke-width='8'/><circle cx='400' cy='400' r='118' stroke-width='2'/><path d='M400 22 V280 M400 520 V778 M22 400 H280 M520 400 H778' stroke-width='6'/><path d='M133 133 L303 303 M497 497 L667 667 M667 133 L497 303 M303 497 L133 667' stroke-width='6'/></g><g fill='%238C1F28'><circle cx='400' cy='20' r='6'/><circle cx='400' cy='780' r='6'/><circle cx='20' cy='400' r='6'/><circle cx='780' cy='400' r='6'/><circle cx='131' cy='131' r='6'/><circle cx='669' cy='669' r='6'/><circle cx='669' cy='131' r='6'/><circle cx='131' cy='669' r='6'/></g></svg>");
+  background-repeat: no-repeat;
+  background-position: center -80px;
+  background-size: clamp(520px, 80vw, 760px) auto;
+  opacity: 0.08;
+  mix-blend-mode: overlay;
+  transform: rotate(180deg);
+}
+
+.age-gate__header {
+  position: relative;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(var(--space-1), 1.5vw, var(--space-2));
+  margin-inline: auto;
+}
+
+.age-gate__rune {
+  color: var(--accent-blood);
+  font-size: clamp(var(--fs-h2), 6vw, var(--fs-h1));
+  line-height: 1;
+  text-shadow: 0 18px 48px var(--accent-blood-20);
+}
+
+.age-gate__title {
+  font-family: var(--font-display);
+  font-size: clamp(var(--fs-h2), 5vw, var(--fs-display));
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  line-height: 1.05;
+}
+
+/* Бедж использует те же классы, что и подпись в футере:
+   18+ в красной рамке + приглушённый текст, без отдельной «плашки». */
+.age-gate__badge {
+  position: relative;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-inline: auto;
+  text-align: center;
+}
+
+.age-gate__body {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  width: 100%;
+  max-width: 34rem;
+  margin-inline: auto;
+}
+
+.age-gate__body--denied {
+  gap: var(--space-2);
+}
+
+.age-gate__text {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: clamp(var(--fs-body), 2vw, 1.15rem);
+  line-height: 1.75;
+  text-wrap: pretty;
+}
+
+.age-gate__text--strong {
+  color: var(--text-primary);
+  font-family: var(--font-display);
+  font-size: clamp(var(--fs-h3), 3.5vw, var(--fs-h2));
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.age-gate__actions {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  width: 100%;
+  padding-top: clamp(var(--space-3), 3vw, var(--space-4));
+  border-top: 1px solid var(--line-subtle);
+}
+
+.age-gate__btn {
+  min-width: clamp(220px, 36vw, 280px);
+  justify-content: center;
+}
+
+@media (min-width: 768px) {
+  .age-gate__actions {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 480px) {
+  .age-gate__modal {
+    gap: var(--space-3);
+    padding: var(--space-3);
+    scrollbar-width: none;
+  }
+
+  .age-gate__modal::-webkit-scrollbar {
+    display: none;
+  }
+
+  .age-gate__text {
+    line-height: 1.7;
+  }
+
+  .age-gate__actions {
+    padding-top: var(--space-3);
+  }
+
+  .age-gate__btn {
+    width: 100%;
+    min-width: 0;
+    max-width: 320px;
+  }
+}
+
+/* Очень короткие экраны (например, 320×568): убираем декор и чуть
+   уплотняем ритм, чтобы обе кнопки помещались без внутреннего скролла. */
+@media (max-width: 480px) and (max-height: 620px) {
+  .age-gate__rune {
+    display: none;
+  }
+
+  .age-gate__modal {
+    gap: var(--space-2);
+  }
+
+  .age-gate__text {
+    line-height: 1.6;
+  }
+
+  .age-gate__actions {
+    padding-top: var(--space-2);
+  }
+}
