@@ -5,6 +5,7 @@ import Navbar from './components/Navbar.jsx';
 import ErrorBoundary from './components/ErrorBoundary.jsx';
 import Footer from './components/Footer.jsx';
 import OfflineBanner from './components/OfflineBanner.jsx';
+import AgeGate from './components/AgeGate.jsx';
 import HomePage from './routes/HomePage.jsx';
 import ReaderPage from './routes/ReaderPage.jsx';
 import NotFoundPage from './routes/NotFoundPage.jsx';
@@ -45,6 +46,7 @@ export default function App() {
           </main>
           <Footer />
           <OfflineBanner />
+          <AgeGate />
         </div>
       </BrowserRouter>
     </MotionConfig>

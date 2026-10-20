@@ -2,6 +2,7 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import App from './App.jsx';
 import './index.css';
+import './styles/age-gate.css';
 import { injectFonts } from './lib/fonts.js';
 
 // Этап 7.3: @font-face инжектится с BASE_URL — работает и в корне, и в подпапке
