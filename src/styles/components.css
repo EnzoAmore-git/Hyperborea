@@ -1391,6 +1391,67 @@ input[type='radio'] {
   margin-left: auto;
 }
 
+/* ----- музыка в читалке ----- */
+.reader__sound {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  flex: none;
+}
+
+.reader__btn--sound {
+  gap: 0.35rem;
+}
+
+.reader__sound-icon {
+  font-size: 1.05em;
+  line-height: 1;
+  color: var(--accent-gold);
+}
+
+.reader__btn--sound[aria-pressed='false'] .reader__sound-icon {
+  color: var(--text-muted);
+  opacity: 0.8;
+}
+
+.reader__btn--sound[aria-pressed='true'] {
+  border-color: var(--accent-gold-40);
+  background: var(--accent-gold-10);
+  color: var(--text-primary);
+}
+
+.reader__btn--sound[aria-pressed='true'] .reader__sound-icon {
+  color: var(--accent-gold);
+  text-shadow: 0 0 10px var(--accent-gold-40);
+}
+
+.reader__volume {
+  width: 84px;
+  height: 18px;
+  margin: 0;
+  padding: 0;
+  accent-color: var(--accent-gold);
+  cursor: pointer;
+}
+
+@media (max-width: 480px) {
+  .reader__sound {
+    gap: 0.3rem;
+  }
+
+  .reader__sound-text {
+    display: none;
+  }
+
+  .reader__btn--sound {
+    padding: 0.5rem 0.62rem;
+  }
+
+  .reader__volume {
+    width: 58px;
+  }
+}
+
 .reader__meta {
   flex: 1;
   overflow: hidden;

@@ -13,8 +13,10 @@ import {
   getNextChapter,
   getPrevChapter,
 } from '../data/comics.js';
+import { getMusicCue } from '../data/soundtrack.js';
 import { useSaveData } from '../hooks/useSaveData.js';
 import { useFocusTrap } from '../lib/focusTrap.js';
+import { useAdaptiveSoundtrack } from '../hooks/useAdaptiveSoundtrack.js';
 import ReaderError from './ReaderError.jsx';
 
 const POSITION_KEY = 'hyperborea:reading-position';
@@ -99,6 +101,12 @@ export default function ComicReader() {
   const chapterProgress = ch && chapters.length
     ? (chapterIdx / chapters.length) * 100
     : 0;
+
+  const musicCue = useMemo(
+    () => getMusicCue(chapterId, pageNum),
+    [chapterId, pageNum],
+  );
+  const soundtrack = useAdaptiveSoundtrack(musicCue);
 
   /* ---------- скролл к странице ---------- */
   const scrollToPage = (num, behavior) => {
@@ -486,6 +494,50 @@ export default function ComicReader() {
             {ch ? `${ch.title}. ${ch.subtitle}` : ''}
             {ch ? ` · стр. ${pageNum} / ${ch.pages.length}` : ''}
           </p>
+          <div
+            className="reader__sound"
+            data-mode={soundtrack.mode}
+            data-status={soundtrack.status}
+          >
+            <button
+              type="button"
+              className="reader__btn reader__btn--sound"
+              aria-label={
+                soundtrack.enabled
+                  ? `Выключить музыку. Сейчас: ${musicCue.moodLabel}`
+                  : 'Включить музыку'
+              }
+              aria-pressed={soundtrack.enabled}
+              title={
+                soundtrack.enabled
+                  ? `Музыка: ${musicCue.moodLabel} · ${musicCue.label}`
+                  : 'Включить музыку: она следует за сценой'
+              }
+              disabled={!soundtrack.supported}
+              onClick={soundtrack.toggle}
+            >
+              <span className="reader__sound-icon" aria-hidden="true">
+                {soundtrack.enabled ? '♫' : '♪'}
+              </span>
+              <span className="reader__sound-text">
+                {soundtrack.enabled
+                  ? soundtrack.status === 'loading' ? 'Загрузка' : 'Звук'
+                  : 'Включить'}
+              </span>
+            </button>
+            {soundtrack.enabled && (
+              <input
+                className="reader__volume"
+                type="range"
+                min="0"
+                max="100"
+                step="1"
+                value={Math.round(soundtrack.volume * 100)}
+                aria-label="Громкость музыки"
+                onChange={(e) => soundtrack.setVolume(Number(e.target.value) / 100)}
+              />
+            )}
+          </div>
           <button
             type="button"
             className="reader__btn reader__btn--chapters"

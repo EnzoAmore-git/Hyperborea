@@ -8,6 +8,7 @@
 - [`docs/proposal.md`](docs/proposal.md) — цели, стек, критерии успеха
 - [`docs/design.md`](docs/design.md) — дизайн-система (цвет, типографика, анимации, layout)
 - [`docs/tasks.md`](docs/tasks.md) — этапы реализации, задачи и критерии готовности
+- [`docs/soundtrack.md`](docs/soundtrack.md) — адаптивная музыка читалки и подключение нейромузыки
 
 ## Разработка
 ```bash
