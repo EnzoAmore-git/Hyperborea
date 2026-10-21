@@ -1,3 +1,4 @@
+import { BACKGROUND_MUSIC_ENABLED } from '../config/features.js';
 /**
  * Хук управления адаптивным саундтреком читалки.
  * Звук всегда стартует только по явному клику — браузеры не дают
@@ -43,10 +44,11 @@ export function useAdaptiveSoundtrack(cue) {
   volumeRef.current = volume;
   cueRef.current = cue;
 
-  const supported = typeof window !== 'undefined'
+  const supported = BACKGROUND_MUSIC_ENABLED && typeof window !== 'undefined'
     && Boolean(window.AudioContext || window.webkitAudioContext);
 
   const ensureEngine = () => {
+    if (!BACKGROUND_MUSIC_ENABLED) return null;
     if (engineRef.current) return engineRef.current;
     const engine = new SoundtrackEngine({
       volume: volumeRef.current,

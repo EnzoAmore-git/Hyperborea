@@ -258,3 +258,7 @@ window.__hbSoundtrackDebug()
 
 Осталось только сгенерировать и положить аудиофайлы, заполнить манифест и
 проверить стыки лупов.
+
+## Feature flag
+
+Background music is disabled by default. `VITE_BACKGROUND_MUSIC=true` enables it at build time (use `.env.local` for development). With the flag off, reader controls are hidden, audio cannot start, and soundtrack assets are omitted from the build. Rebuild to change the flag. `/version.json` records the source commit and flag state.

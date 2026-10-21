@@ -1,3 +1,4 @@
+import { BACKGROUND_MUSIC_ENABLED } from '../config/features.js';
 /**
  * Вертикальная читалка вебтуна (Этап 4 → переработка).
  * - Все страницы главы — друг под другом, выровнены по ширине;
@@ -578,7 +579,7 @@ export default function ComicReader() {
             {ch ? `${ch.title}. ${ch.subtitle}` : ''}
             {ch ? ` · стр. ${pageNum} / ${ch.pages.length}` : ''}
           </p>
-          <div
+          {BACKGROUND_MUSIC_ENABLED && <div
             className="reader__sound"
             data-mode={soundtrack.mode}
             data-status={soundtrack.status}
@@ -621,7 +622,7 @@ export default function ComicReader() {
                 onChange={(e) => soundtrack.setVolume(Number(e.target.value) / 100)}
               />
             )}
-          </div>
+          </div>}
           <button
             type="button"
             className="reader__btn reader__btn--chapters"

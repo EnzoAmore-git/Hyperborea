@@ -1,4 +1,7 @@
-import { defineConfig } from 'vite';
+import { execFileSync } from 'node:child_process';
+import { rmSync } from 'node:fs';
+import { resolve } from 'node:path';
+import { defineConfig, loadEnv } from 'vite';
 import react from '@vitejs/plugin-react';
 import { VitePWA } from 'vite-plugin-pwa';
 
@@ -8,10 +11,23 @@ const basePath = process.env.VITE_BASE_PATH;
 // (задаётся в workflow переменной VITE_BASE_PATH, например '/Hyperborea').
 const base = basePath ? `/${basePath.replace(/^\/+|\/+$/g, '')}/` : '/';
 
-export default defineConfig({
+export default defineConfig(({ mode }) => {
+  const env = loadEnv(mode, process.cwd(), 'VITE_');
+  const musicEnabled = (process.env.VITE_BACKGROUND_MUSIC ?? env.VITE_BACKGROUND_MUSIC) === 'true';
+  const commit = execFileSync('git', ['rev-parse', 'HEAD'], { encoding: 'utf8' }).trim();
+  return {
   base,
   plugins: [
       react(),
+      {
+        name: 'release-info',
+        generateBundle() {
+          this.emitFile({ type: 'asset', fileName: 'version.json', source: JSON.stringify({ commit, features: { backgroundMusic: musicEnabled } }) });
+        },
+        closeBundle() {
+          if (!musicEnabled) rmSync(resolve('dist/audio/soundtrack'), { recursive: true, force: true });
+        },
+      },
       // Этап 6.6: офлайн (SW + precache + runtime-кеш артов/страниц/шрифтов)
       VitePWA({
         registerType: 'autoUpdate',
@@ -85,4 +101,5 @@ export default defineConfig({
         },
       },
     },
+};
 });
