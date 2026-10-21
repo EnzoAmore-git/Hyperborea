@@ -96,6 +96,9 @@ export default function ComicReader() {
   }, [panelOpen, chapterId, pageNum]);
 
   const chapterIdx = ch ? chapters.findIndex((c) => c.id === ch.id) + 1 : 0;
+  const chapterProgress = ch && chapters.length
+    ? (chapterIdx / chapters.length) * 100
+    : 0;
 
   /* ---------- скролл к странице ---------- */
   const scrollToPage = (num, behavior) => {
@@ -424,6 +427,18 @@ export default function ComicReader() {
     goToPage(num, 'smooth');
   };
 
+  /* ---------- клик по шкале глав ---------- */
+  const handleChapterScaleClick = (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const frac = 1 - (e.clientY - rect.top) / rect.height;
+    const idx = Math.max(
+      1,
+      Math.min(chapters.length, Math.round(frac * chapters.length)),
+    );
+    const target = chapters[idx - 1];
+    if (target && target.id !== chapterId) openChapter(target.id, 1);
+  };
+
   const exitReader = () => navigate('/', { replace: true });
 
   if (fatal) {
@@ -644,18 +659,16 @@ export default function ComicReader() {
           <em>/</em>
           {chapters.length}
         </div>
-        <div className="reader__scale reader__scale--chapters" aria-label="Главы">
-          {chapters.map((c) => (
-            <button
-              key={c.id}
-              type="button"
-              className={`reader__chapter-dot${c.id === chapterId ? ' is-active' : ''}`}
-              title={c.title}
-              aria-label={c.title}
-              aria-pressed={c.id === chapterId}
-              onClick={() => goChapter(c.id)}
-            />
-          ))}
+        <div
+          className="reader__scale reader__scale--chapters"
+          aria-label={`Прогресс по главам: ${chapterIdx} из ${chapters.length}`}
+          title="Прогресс по главам. Клик — перейти к главе"
+          onClick={handleChapterScaleClick}
+        >
+          <div
+            className="reader__scale-fill"
+            style={{ height: `${chapterProgress}%` }}
+          />
         </div>
       </aside>
 

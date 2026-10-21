@@ -1979,44 +1979,8 @@ overflow: hidden;
   transition: height var(--dur-medium) var(--ease-smooth);
 }
 
-/* шкала-индикатор глав */
-.reader__scale--chapters {
-  width: auto;
-  height: auto;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--space-2);
-  background: transparent;
-  overflow: visible;
-  cursor: default;
-  display: flex;
-}
-
-.reader__chapter-dot {
-  width: 8px;
-  height: 8px;
-  padding: 0;
-  border: 1px solid var(--line-subtle);
-  border-radius: 50%;
-  background: rgba(18, 16, 26, 0.75);
-  cursor: pointer;
-  transition:
-    background-color var(--dur-fast) var(--ease-standard),
-    border-color var(--dur-fast) var(--ease-standard),
-    box-shadow var(--dur-fast) var(--ease-standard),
-    transform var(--dur-fast) var(--ease-standard);
-}
-
-.reader__chapter-dot:hover {
-  border-color: var(--accent-blood-40);
-}
-
-.reader__chapter-dot.is-active {
-  background: var(--accent-blood);
-  border-color: var(--accent-blood);
-  box-shadow: 0 0 8px var(--accent-blood-40);
-  transform: scale(1.35);
-}
+/* шкала-индикатор глав использует те же стили, что и шкала страниц:
+   высота полосы отражает номер главы, а не количество точек. */
 
 /* подсказка — по центру вьюпорта, над нижней панелью */
 .reader__hint {
