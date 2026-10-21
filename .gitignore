@@ -32,3 +32,10 @@ desktop.ini
 /sources/*.docx
 /sources/Team/
 /sources/Глава_*/
+# Private SSH material
+/.ssh/
+*.pem
+*.key
+id_rsa
+id_ed25519
+id_ecdsa

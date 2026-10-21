@@ -5,7 +5,7 @@
  * - переключение глав справа (счётчик/стрелки/индикатор глав);
  * - клавиатура из design.md; панель глав; подсказка с авто-скрытием.
  */
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import {
   chapters,
@@ -14,12 +14,14 @@ import {
   getPrevChapter,
 } from '../data/comics.js';
 import { getMusicCue } from '../data/soundtrack.js';
+import { READING_POSITION_VERSION, migrateReadingPosition } from '../data/readerMigration.js';
 import { useSaveData } from '../hooks/useSaveData.js';
 import { useFocusTrap } from '../lib/focusTrap.js';
 import { useAdaptiveSoundtrack } from '../hooks/useAdaptiveSoundtrack.js';
 import ReaderError from './ReaderError.jsx';
 
 const POSITION_KEY = 'hyperborea:reading-position';
+const POSITION_VERSION_KEY = 'hyperborea:reading-position-version';
 const HINT_DURATION = 3400;
 const TOP_OFFSET = 96; // высота подсказки активной страницы от верха вьюпорта
 const PANEL_INERT_SELECTORS = [
@@ -38,7 +40,20 @@ const reduceMotion = () =>
 const readSavedPosition = () => {
   try {
     const raw = localStorage.getItem(POSITION_KEY);
-    return raw ? JSON.parse(raw) : null;
+    const version = localStorage.getItem(POSITION_VERSION_KEY);
+    const saved = migrateReadingPosition(raw ? JSON.parse(raw) : null, version);
+    const chapter = getChapter(saved?.ch);
+    const page = Number(saved?.pg);
+    if (!chapter || !Number.isInteger(page) || page < 1 || page > chapter.pages.length) return null;
+    const position = { ch: chapter.id, pg: page };
+    if (version !== READING_POSITION_VERSION) {
+      // Storage can be read-only; keep the valid in-memory migration in that case.
+      try {
+        localStorage.setItem(POSITION_KEY, JSON.stringify(position));
+        localStorage.setItem(POSITION_VERSION_KEY, READING_POSITION_VERSION);
+      } catch { /* private mode/quota */ }
+    }
+    return position;
   } catch {
     return null;
   }
@@ -46,6 +61,7 @@ const readSavedPosition = () => {
 const savePosition = (c, p) => {
   try {
     localStorage.setItem(POSITION_KEY, JSON.stringify({ ch: c, pg: p }));
+    localStorage.setItem(POSITION_VERSION_KEY, READING_POSITION_VERSION);
   } catch {
     /* ignore quota/private mode */
   }
@@ -64,11 +80,21 @@ export default function ComicReader() {
 
   const [chapterId, setChapterId] = useState(null);
   const [pageNum, setPageNum] = useState(1);
+  const [paragraphNum, setParagraphNum] = useState(1);
   const [panelOpen, setPanelOpen] = useState(false);
   const [hintVisible, setHintVisible] = useState(false);
   const [fatal, setFatal] = useState(false);
   const [errPages, setErrPages] = useState({});
   const [navTick, setNavTick] = useState(0);
+  // Keep the entry bookmark stable even if the reader starts browsing elsewhere.
+  // A visit that already opens the saved page needs no reminder later on.
+  const [resumeNotice, setResumeNotice] = useState(() => {
+    const saved = readSavedPosition();
+    const target = getChapter(params.chapterId);
+    if (!saved || !target) return null;
+    const samePosition = saved.ch === target.id && saved.pg === clampNum(params.pageNum, target);
+    return samePosition ? null : saved;
+  });
 
   const scrollRef = useRef(null);
   const readerRef = useRef(null);
@@ -84,6 +110,32 @@ export default function ComicReader() {
   const exitRef = useRef(null);
 
   const ch = chapterId ? getChapter(chapterId) : null;
+
+  useEffect(() => {
+    if (resumeNotice?.ch === chapterId && resumeNotice.pg === pageNum) {
+      setResumeNotice(null);
+    }
+  }, [chapterId, pageNum, resumeNotice]);
+
+  // Account for both sticky rows when locating a page/paragraph. The banner
+  // lives in the document flow; no text has to be hidden behind it on navigation.
+  useLayoutEffect(() => {
+    const box = scrollRef.current;
+    const header = box?.querySelector('.reader__top');
+    if (!box || !header) return;
+    const notice = box.querySelector('.reader__resume-notice');
+    const measure = () => {
+      const headerHeight = header.offsetHeight;
+      const inset = headerHeight + (notice?.offsetHeight ?? 0) + 12;
+      box.style.setProperty('--reader-top-height', `${headerHeight}px`);
+      box.style.setProperty('--reader-sticky-inset', `${inset}px`);
+    };
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(header);
+    if (notice) observer.observe(notice);
+    return () => observer.disconnect();
+  }, [resumeNotice]);
 
   // «Продолжить чтение»: позиция из localStorage, если она отличается
   // от текущей страницы. Пересчитываем при открытии панели, чтобы не
@@ -103,8 +155,8 @@ export default function ComicReader() {
     : 0;
 
   const musicCue = useMemo(
-    () => getMusicCue(chapterId, pageNum),
-    [chapterId, pageNum],
+    () => getMusicCue(chapterId, pageNum, paragraphNum),
+    [chapterId, pageNum, paragraphNum],
   );
   const soundtrack = useAdaptiveSoundtrack(musicCue);
 
@@ -128,6 +180,7 @@ export default function ComicReader() {
     const p = Math.max(1, Math.min(ch.pages.length, Number(num) || 1));
     lastActiveRef.current = p;
     setPageNum(p);
+    setParagraphNum(1);
     savePosition(ch.id, p);
     navigate(`/read/${ch.id}/${p}`, { replace: true });
     // пока идёт программный скролл, не даём onScroll «откатить» счётчик назад
@@ -146,13 +199,24 @@ export default function ComicReader() {
       const nodes = el.querySelectorAll('.reader__webtoon-page');
       if (!nodes.length) return;
       let active = 1;
-      const top = el.getBoundingClientRect().top + TOP_OFFSET;
+      const inset = parseFloat(el.style.getPropertyValue('--reader-sticky-inset')) || TOP_OFFSET;
+      const top = el.getBoundingClientRect().top + inset;
       nodes.forEach((node) => {
-        if (node.getBoundingClientRect().top <= top) {
+        if (node.getBoundingClientRect().top <= top + 2) {
           active = Number(node.dataset.page) || active;
         }
       });
       active = Math.max(1, Math.min(ch.pages.length, active));
+      // Read-ahead is deliberately small: music follows the text near the top,
+      // rather than revealing a twist still at the bottom of a long page.
+      const activeNode = el.querySelector(`.reader__webtoon-page[data-page="${active}"]`);
+      let paragraph = 1;
+      activeNode?.querySelectorAll('[data-paragraph]').forEach((node) => {
+        if (node.getBoundingClientRect().top <= top + 32) {
+          paragraph = Number(node.dataset.paragraph) || paragraph;
+        }
+      });
+      setParagraphNum(paragraph);
       if (active !== lastActiveRef.current) {
         lastActiveRef.current = active;
         setPageNum(active);
@@ -170,6 +234,7 @@ export default function ComicReader() {
     setChapterId(id);
     lastActiveRef.current = p;
     setPageNum(p);
+    setParagraphNum(1);
     setErrPages({});
     // При входе по URL не перезаписываем закладку стартовой страницей:
     // иначе «Продолжить чтение» теряется, не успев показаться.
@@ -342,6 +407,11 @@ export default function ComicReader() {
         'PageUp', 'PageDown', ' ', 'Home', 'End', 'g', 'G', 'Escape',
       ];
       if (!handled.includes(e.key)) return;
+      // Space/arrow keys must retain their native behavior on actual controls.
+      // Otherwise Space on "Continue" would turn a page instead of clicking it.
+      const control = e.target instanceof Element
+        && e.target.closest('button, a, input, select, textarea, [contenteditable="true"]');
+      if (control && !['g', 'G', 'Escape'].includes(e.key)) return;
 
       if (panelOpen) {
         if (e.key === 'Escape' || e.key === 'g' || e.key === 'G') {
@@ -447,6 +517,18 @@ export default function ComicReader() {
     if (target && target.id !== chapterId) openChapter(target.id, 1);
   };
 
+  const dismissResumeNotice = () => {
+    setResumeNotice(null);
+    requestAnimationFrame(() => scrollRef.current?.focus({ preventScroll: true }));
+  };
+
+  const continueFromNotice = () => {
+    if (!resumeNotice) return;
+    const target = resumeNotice;
+    dismissResumeNotice();
+    openChapter(target.ch, target.pg);
+  };
+
   const exitReader = () => navigate('/', { replace: true });
 
   if (fatal) {
@@ -478,6 +560,8 @@ export default function ComicReader() {
         className="reader__scroll"
         ref={scrollRef}
         onScroll={handleScroll}
+        tabIndex={-1}
+        aria-label="Страницы комикса"
         data-lenis-prevent
       >
         <header className="reader__top">
@@ -549,6 +633,29 @@ export default function ComicReader() {
           </button>
         </header>
 
+        {resumeNotice && (
+          <aside className="reader__resume-notice" aria-label="Сохранённое место чтения">
+            <div className="reader__resume-notice-info" role="status">
+              <span className="reader__resume-notice-label">Вы остановились</span>
+              <span className="reader__resume-notice-target">
+                {getChapter(resumeNotice.ch).title} · стр. {resumeNotice.pg}
+              </span>
+            </div>
+            <div className="reader__resume-notice-actions">
+              <button
+                type="button"
+                className="reader__btn reader__resume-notice-continue"
+                onClick={continueFromNotice}
+              >
+                Продолжить отсюда
+              </button>
+              <button type="button" className="reader__btn" onClick={dismissResumeNotice}>
+                Закрыть
+              </button>
+            </div>
+          </aside>
+        )}
+
         {ch?.pages.map((pg, i) =>
           pg.type === 'chapter' ? (
             <figure
@@ -569,7 +676,7 @@ export default function ComicReader() {
             >
               <div className="reader__text">
                 {pg.paragraphs.map((p, j) => (
-                  <p key={j}>{p}</p>
+                  <p key={j} data-paragraph={j + 1}>{p}</p>
                 ))}
               </div>
             </figure>

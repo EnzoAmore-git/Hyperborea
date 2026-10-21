@@ -1,0 +1,863 @@
+{
+  "version": 2,
+  "source": "src/data/comics.js + src/data/book.js",
+  "scope": "Все 10 опубликованных глав, не вся исходная рукопись",
+  "labels": {
+    "calm": "Покой и близость",
+    "mystery": "Тайна и поиск",
+    "tension": "Тревога и ожидание",
+    "battle": "Бой и прорыв",
+    "sorrow": "Скорбь и утрата",
+    "horror": "Ужас и Тьма",
+    "sacred": "Свет и надежда"
+  },
+  "scenes": {
+    "1": [
+      {
+        "fromPage": 1,
+        "toPage": 5,
+        "mood": "mystery",
+        "intensity": 0.24,
+        "label": "Мир до знамения"
+      },
+      {
+        "fromPage": 6,
+        "toPage": 9,
+        "mood": "sacred",
+        "intensity": 0.55,
+        "label": "Луч Чистого Света"
+      },
+      {
+        "fromPage": 10,
+        "toPage": 14,
+        "mood": "mystery",
+        "intensity": 0.48,
+        "label": "Хозяин над городом"
+      },
+      {
+        "fromPage": 15,
+        "toPage": 22,
+        "mood": "horror",
+        "intensity": 0.48,
+        "label": "Клетки под лабораторией"
+      },
+      {
+        "fromPage": 23,
+        "toPage": 25,
+        "mood": "tension",
+        "intensity": 0.53,
+        "label": "Начинается новая игра"
+      }
+    ],
+    "2": [
+      {
+        "fromPage": 1,
+        "toPage": 5,
+        "mood": "tension",
+        "intensity": 0.46,
+        "label": "Мёртвый дом"
+      },
+      {
+        "fromPage": 6,
+        "toPage": 11,
+        "mood": "battle",
+        "intensity": 0.68,
+        "label": "Зачистка подъезда"
+      },
+      {
+        "fromPage": 12,
+        "toPage": 19,
+        "mood": "battle",
+        "intensity": 0.9,
+        "label": "Согласованная засада и прорыв"
+      },
+      {
+        "fromPage": 20,
+        "toPage": 22,
+        "mood": "sorrow",
+        "intensity": 0.5,
+        "label": "Погибший Алексеев и раненый"
+      },
+      {
+        "fromPage": 23,
+        "toPage": 29,
+        "mood": "sorrow",
+        "intensity": 0.68,
+        "label": "Ребёнок с крестиком"
+      },
+      {
+        "fromPage": 30,
+        "toPage": 32,
+        "mood": "sorrow",
+        "intensity": 0.4,
+        "label": "Помянуть товарища"
+      },
+      {
+        "fromPage": 33,
+        "toPage": 35,
+        "mood": "mystery",
+        "intensity": 0.42,
+        "label": "Кому выгодны мутанты"
+      },
+      {
+        "fromPage": 36,
+        "toPage": 40,
+        "mood": "calm",
+        "intensity": 0.28,
+        "label": "Дружба и память рода"
+      }
+    ],
+    "3": [
+      {
+        "fromPage": 1,
+        "toPage": 4,
+        "mood": "tension",
+        "intensity": 0.4,
+        "label": "Приказ и путь через город"
+      },
+      {
+        "fromPage": 5,
+        "toPage": 5,
+        "mood": "sorrow",
+        "intensity": 0.28,
+        "label": "Усталость и мечта о деревне"
+      },
+      {
+        "fromPage": 6,
+        "toPage": 9,
+        "mood": "tension",
+        "intensity": 0.57,
+        "label": "Вход в старый храм"
+      },
+      {
+        "fromPage": 10,
+        "toPage": 16,
+        "mood": "battle",
+        "intensity": 0.78,
+        "label": "Бой под куполом"
+      },
+      {
+        "fromPage": 17,
+        "toPage": 29,
+        "mood": "battle",
+        "intensity": 0.96,
+        "label": "Огромный волчара"
+      },
+      {
+        "fromPage": 30,
+        "toPage": 30,
+        "mood": "sorrow",
+        "intensity": 0.48,
+        "label": "Четыре тела под брезентом"
+      },
+      {
+        "fromPage": 31,
+        "toPage": 32,
+        "mood": "mystery",
+        "intensity": 0.37,
+        "label": "Древняя книга"
+      },
+      {
+        "fromPage": 33,
+        "toPage": 36,
+        "mood": "calm",
+        "intensity": 0.28,
+        "label": "Тёплая память: знакомство с Алевтиной"
+      }
+    ],
+    "4": [
+      {
+        "fromPage": 1,
+        "toPage": 3,
+        "mood": "mystery",
+        "intensity": 0.48,
+        "label": "Генотип VOLK"
+      },
+      {
+        "fromPage": 4,
+        "toPage": 5,
+        "mood": "tension",
+        "intensity": 0.52,
+        "label": "Генерал запрещает расследование"
+      },
+      {
+        "fromPage": 6,
+        "toPage": 7,
+        "mood": "mystery",
+        "intensity": 0.52,
+        "label": "След Алатырь-Оберега"
+      }
+    ],
+    "5": [
+      {
+        "fromPage": 1,
+        "toPage": 3,
+        "mood": "tension",
+        "intensity": 0.6,
+        "label": "Похищенные дети и запрет штаба"
+      },
+      {
+        "fromPage": 4,
+        "toPage": 5,
+        "mood": "mystery",
+        "intensity": 0.54,
+        "label": "Добровольцы спускаются в коллектор"
+      },
+      {
+        "fromPage": 6,
+        "toPage": 6,
+        "mood": "tension",
+        "intensity": 0.65,
+        "label": "Камеры и логотип Оберега"
+      },
+      {
+        "fromPage": 7,
+        "toPage": 7,
+        "mood": "mystery",
+        "intensity": 0.6,
+        "label": "Скрытый лабораторный комплекс"
+      },
+      {
+        "fromPage": 8,
+        "toPage": 8,
+        "mood": "horror",
+        "intensity": 0.77,
+        "label": "Пациент, пустые клетки и запертая дверь"
+      }
+    ],
+    "6": [
+      {
+        "fromPage": 1,
+        "toPage": 3,
+        "mood": "horror",
+        "intensity": 0.84,
+        "label": "Одержимый священник"
+      },
+      {
+        "fromPage": 4,
+        "toPage": 5,
+        "mood": "sorrow",
+        "intensity": 0.72,
+        "label": "Погибшие родители и Алевтина"
+      },
+      {
+        "fromPage": 6,
+        "toPage": 6,
+        "mood": "horror",
+        "intensity": 0.82,
+        "label": "Тьма стирает личность"
+      },
+      {
+        "fromPage": 7,
+        "toPage": 8,
+        "mood": "sacred",
+        "intensity": 0.67,
+        "label": "Огонёк и древний воин"
+      },
+      {
+        "fromPage": 9,
+        "toPage": 9,
+        "mood": "calm",
+        "intensity": 0.34,
+        "label": "Изгнание скверны"
+      },
+      {
+        "fromPage": 10,
+        "toPage": 11,
+        "mood": "battle",
+        "intensity": 0.9,
+        "label": "Последний бой в лаборатории и помощь Злобина"
+      }
+    ],
+    "7": [
+      {
+        "fromPage": 1,
+        "toPage": 2,
+        "mood": "sorrow",
+        "intensity": 0.55,
+        "label": "Цена операции и Субъект №27"
+      },
+      {
+        "fromPage": 3,
+        "toPage": 3,
+        "mood": "calm",
+        "intensity": 0.28,
+        "label": "Пробуждение в госпитале"
+      },
+      {
+        "fromPage": 4,
+        "toPage": 4,
+        "mood": "mystery",
+        "intensity": 0.4,
+        "label": "Михаил о силе не из мира живых"
+      },
+      {
+        "fromPage": 5,
+        "toPage": 5,
+        "mood": "sacred",
+        "intensity": 0.37,
+        "label": "Золотое сияние и спасение"
+      },
+      {
+        "fromPage": 6,
+        "toPage": 8,
+        "mood": "tension",
+        "intensity": 0.66,
+        "label": "Особое Управление гасит расследование"
+      },
+      {
+        "fromPage": 9,
+        "toPage": 9,
+        "mood": "tension",
+        "intensity": 0.69,
+        "label": "Улики переданы спецслужбам"
+      },
+      {
+        "fromPage": 10,
+        "toPage": 10,
+        "mood": "calm",
+        "intensity": 0.3,
+        "label": "Отказ от слепой мести и вечерняя молитва"
+      },
+      {
+        "fromPage": 11,
+        "toPage": 11,
+        "mood": "calm",
+        "intensity": 0.3,
+        "label": "Планы восстановить церковь"
+      },
+      {
+        "fromPage": 12,
+        "toPage": 12,
+        "mood": "mystery",
+        "intensity": 0.64,
+        "label": "Пустой микроавтобус после покушения"
+      }
+    ],
+    "8": [
+      {
+        "fromPage": 1,
+        "toPage": 2,
+        "mood": "tension",
+        "intensity": 0.49,
+        "label": "Дома под угрозой: не безопасная передышка"
+      },
+      {
+        "fromPage": 3,
+        "toPage": 3,
+        "mood": "calm",
+        "intensity": 0.3,
+        "label": "Разговор о возвращении домой"
+      },
+      {
+        "fromPage": 4,
+        "toPage": 4,
+        "mood": "mystery",
+        "intensity": 0.48,
+        "label": "История похищения Михаила"
+      },
+      {
+        "fromPage": 5,
+        "toPage": 5,
+        "mood": "tension",
+        "intensity": 0.63,
+        "label": "Снова дети-заложники"
+      },
+      {
+        "fromPage": 6,
+        "toPage": 6,
+        "mood": "sacred",
+        "intensity": 0.41,
+        "label": "Поддержка священника перед дорогой"
+      },
+      {
+        "fromPage": 7,
+        "toPage": 8,
+        "mood": "battle",
+        "intensity": 0.83,
+        "label": "Первый штурм: одержимые"
+      },
+      {
+        "fromPage": 9,
+        "toPage": 10,
+        "mood": "tension",
+        "intensity": 0.67,
+        "label": "Подготовка роботов"
+      },
+      {
+        "fromPage": 11,
+        "toPage": 11,
+        "mood": "battle",
+        "intensity": 0.73,
+        "label": "Зачистка и потеря связи"
+      },
+      {
+        "fromPage": 12,
+        "toPage": 13,
+        "mood": "battle",
+        "intensity": 0.97,
+        "label": "Роботы стреляют по своим"
+      },
+      {
+        "fromPage": 14,
+        "toPage": 14,
+        "mood": "tension",
+        "intensity": 0.65,
+        "label": "Одиночное проникновение"
+      },
+      {
+        "fromPage": 15,
+        "toPage": 15,
+        "mood": "horror",
+        "intensity": 0.86,
+        "label": "Математик в коконе"
+      },
+      {
+        "fromPage": 16,
+        "toPage": 17,
+        "mood": "battle",
+        "intensity": 0.9,
+        "label": "Окружение и битва древнего витязя"
+      },
+      {
+        "fromPage": 18,
+        "toPage": 18,
+        "mood": "sacred",
+        "intensity": 0.76,
+        "label": "Свет против чёрных корней"
+      },
+      {
+        "fromPage": 19,
+        "toPage": 19,
+        "mood": "sorrow",
+        "intensity": 0.57,
+        "label": "Освобождение не воскресило погибших"
+      },
+      {
+        "fromPage": 20,
+        "toPage": 20,
+        "mood": "horror",
+        "intensity": 0.78,
+        "label": "Тьма держит носителя"
+      },
+      {
+        "fromPage": 21,
+        "toPage": 21,
+        "mood": "tension",
+        "intensity": 0.9,
+        "label": "Срочная эвакуация детей"
+      },
+      {
+        "fromPage": 22,
+        "toPage": 23,
+        "mood": "sorrow",
+        "intensity": 0.75,
+        "label": "Гибель Злобина"
+      }
+    ],
+    "9": [
+      {
+        "fromPage": 1,
+        "toPage": 3,
+        "mood": "sorrow",
+        "intensity": 0.58,
+        "label": "Похороны друга"
+      },
+      {
+        "fromPage": 4,
+        "toPage": 7,
+        "mood": "tension",
+        "intensity": 0.57,
+        "label": "Спор о судьбе 87 детей"
+      },
+      {
+        "fromPage": 8,
+        "toPage": 8,
+        "mood": "tension",
+        "intensity": 0.38,
+        "label": "Решение ехать к детям"
+      },
+      {
+        "fromPage": 9,
+        "toPage": 10,
+        "mood": "calm",
+        "intensity": 0.3,
+        "label": "Дорога и разговор с Михаилом"
+      },
+      {
+        "fromPage": 11,
+        "toPage": 12,
+        "mood": "tension",
+        "intensity": 0.45,
+        "label": "Сокол: защита или подготовка к войне"
+      },
+      {
+        "fromPage": 13,
+        "toPage": 13,
+        "mood": "sorrow",
+        "intensity": 0.43,
+        "label": "Дети помнят погибшего учителя"
+      },
+      {
+        "fromPage": 14,
+        "toPage": 14,
+        "mood": "calm",
+        "intensity": 0.34,
+        "label": "Честные ответы возвращают доверие"
+      },
+      {
+        "fromPage": 15,
+        "toPage": 15,
+        "mood": "sacred",
+        "intensity": 0.36,
+        "label": "Рисунок и обещание защитить детей"
+      }
+    ],
+    "10": [
+      {
+        "fromPage": 1,
+        "toPage": 2,
+        "mood": "calm",
+        "intensity": 0.29,
+        "label": "Хрупкая повседневность Сокола"
+      },
+      {
+        "fromPage": 3,
+        "toPage": 5,
+        "mood": "tension",
+        "intensity": 0.43,
+        "label": "Телевизионщики делают шоу"
+      },
+      {
+        "fromPage": 6,
+        "toPage": 8,
+        "mood": "tension",
+        "intensity": 0.47,
+        "label": "Решение выступить и предупреждение Михаила"
+      },
+      {
+        "fromPage": 9,
+        "toPage": 10,
+        "mood": "tension",
+        "intensity": 0.6,
+        "label": "Редакционные рамки"
+      },
+      {
+        "fromPage": 11,
+        "toPage": 13,
+        "mood": "tension",
+        "intensity": 0.72,
+        "label": "Эфир и награда: триумф только на экране"
+      },
+      {
+        "fromPage": 14,
+        "toPage": 14,
+        "mood": "mystery",
+        "intensity": 0.55,
+        "label": "Приглашение Палладиума"
+      }
+    ]
+  },
+  "paragraphCues": [
+    {
+      "chapter": "1",
+      "page": 6,
+      "fromParagraph": 1,
+      "mood": "mystery",
+      "intensity": 0.24,
+      "label": "Контраст нищеты и богатства",
+      "urgent": false,
+      "toParagraph": 2
+    },
+    {
+      "chapter": "1",
+      "page": 6,
+      "fromParagraph": 3,
+      "mood": "sacred",
+      "intensity": 0.55,
+      "label": "Луч Чистого Света",
+      "urgent": true,
+      "toParagraph": 6
+    },
+    {
+      "chapter": "2",
+      "page": 19,
+      "fromParagraph": 5,
+      "mood": "sorrow",
+      "intensity": 0.45,
+      "label": "Бой окончен: кто выжил",
+      "urgent": false,
+      "toParagraph": 7
+    },
+    {
+      "chapter": "2",
+      "page": 22,
+      "fromParagraph": 7,
+      "mood": "tension",
+      "intensity": 0.48,
+      "label": "Шорох на лестнице",
+      "urgent": false,
+      "toParagraph": 7
+    },
+    {
+      "chapter": "3",
+      "page": 30,
+      "fromParagraph": 7,
+      "mood": "mystery",
+      "intensity": 0.39,
+      "label": "Книга древнего воина",
+      "urgent": false,
+      "toParagraph": 7
+    },
+    {
+      "chapter": "4",
+      "page": 6,
+      "fromParagraph": 1,
+      "mood": "sorrow",
+      "intensity": 0.3,
+      "label": "Одинокая квартира и мечта о доме",
+      "urgent": false,
+      "toParagraph": 5
+    },
+    {
+      "chapter": "4",
+      "page": 6,
+      "fromParagraph": 6,
+      "mood": "mystery",
+      "intensity": 0.45,
+      "label": "Поиск генетической базы",
+      "urgent": false,
+      "toParagraph": 23
+    },
+    {
+      "chapter": "4",
+      "page": 7,
+      "fromParagraph": 16,
+      "mood": "tension",
+      "intensity": 0.72,
+      "label": "Срочный вызов: похищены дети",
+      "urgent": true,
+      "toParagraph": 23
+    },
+    {
+      "chapter": "5",
+      "page": 7,
+      "fromParagraph": 20,
+      "mood": "tension",
+      "intensity": 0.67,
+      "label": "Дверь открывается сама",
+      "urgent": false,
+      "toParagraph": 24
+    },
+    {
+      "chapter": "5",
+      "page": 7,
+      "fromParagraph": 25,
+      "mood": "horror",
+      "intensity": 0.64,
+      "label": "Человек, привязанный к креслу",
+      "urgent": false,
+      "toParagraph": 28
+    },
+    {
+      "chapter": "6",
+      "page": 5,
+      "fromParagraph": 9,
+      "mood": "horror",
+      "intensity": 0.78,
+      "label": "Бассейн чёрной крови",
+      "urgent": true,
+      "toParagraph": 9
+    },
+    {
+      "chapter": "6",
+      "page": 7,
+      "fromParagraph": 1,
+      "mood": "sorrow",
+      "intensity": 0.45,
+      "label": "Из отчаяния ещё не вышел",
+      "urgent": false,
+      "toParagraph": 4
+    },
+    {
+      "chapter": "6",
+      "page": 7,
+      "fromParagraph": 5,
+      "mood": "sacred",
+      "intensity": 0.38,
+      "label": "Старец протягивает руку",
+      "urgent": false,
+      "toParagraph": 18
+    },
+    {
+      "chapter": "6",
+      "page": 9,
+      "fromParagraph": 7,
+      "mood": "sorrow",
+      "intensity": 0.43,
+      "label": "Ранен Чижов",
+      "urgent": false,
+      "toParagraph": 11
+    },
+    {
+      "chapter": "6",
+      "page": 9,
+      "fromParagraph": 12,
+      "mood": "tension",
+      "intensity": 0.74,
+      "label": "Удары за бронированной дверью",
+      "urgent": true,
+      "toParagraph": 18
+    },
+    {
+      "chapter": "6",
+      "page": 11,
+      "fromParagraph": 8,
+      "mood": "calm",
+      "intensity": 0.35,
+      "label": "Друзья вытащили из ловушки",
+      "urgent": false,
+      "toParagraph": 9
+    },
+    {
+      "chapter": "7",
+      "page": 2,
+      "fromParagraph": 15,
+      "mood": "calm",
+      "intensity": 0.26,
+      "label": "Утро госпиталя",
+      "urgent": false,
+      "toParagraph": 16
+    },
+    {
+      "chapter": "7",
+      "page": 5,
+      "fromParagraph": 16,
+      "mood": "sorrow",
+      "intensity": 0.58,
+      "label": "Чижов не выжил",
+      "urgent": false,
+      "toParagraph": 17
+    },
+    {
+      "chapter": "7",
+      "page": 9,
+      "fromParagraph": 13,
+      "mood": "sorrow",
+      "intensity": 0.55,
+      "label": "Правда и улики уничтожены",
+      "urgent": false,
+      "toParagraph": 18
+    },
+    {
+      "chapter": "7",
+      "page": 11,
+      "fromParagraph": 11,
+      "mood": "tension",
+      "intensity": 0.87,
+      "label": "Микроавтобус несётся на героев",
+      "urgent": true,
+      "toParagraph": 14
+    },
+    {
+      "chapter": "8",
+      "page": 4,
+      "fromParagraph": 3,
+      "mood": "mystery",
+      "intensity": 0.5,
+      "label": "Исчезновения и мнимая благотворительность",
+      "urgent": false,
+      "toParagraph": 18
+    },
+    {
+      "chapter": "8",
+      "page": 11,
+      "fromParagraph": 8,
+      "mood": "horror",
+      "intensity": 0.72,
+      "label": "Скверна подчиняет электронику",
+      "urgent": true,
+      "toParagraph": 13
+    },
+    {
+      "chapter": "8",
+      "page": 14,
+      "fromParagraph": 7,
+      "mood": "horror",
+      "intensity": 0.57,
+      "label": "Внутри заражённого здания",
+      "urgent": false,
+      "toParagraph": 12
+    },
+    {
+      "chapter": "8",
+      "page": 18,
+      "fromParagraph": 4,
+      "mood": "sacred",
+      "intensity": 0.76,
+      "label": "Свет вспыхивает на клинке",
+      "urgent": true,
+      "toParagraph": 10
+    },
+    {
+      "chapter": "8",
+      "page": 19,
+      "fromParagraph": 8,
+      "mood": "horror",
+      "intensity": 0.66,
+      "label": "Тьма ещё не покинула учителя",
+      "urgent": false,
+      "toParagraph": 14
+    },
+    {
+      "chapter": "8",
+      "page": 20,
+      "fromParagraph": 8,
+      "mood": "tension",
+      "intensity": 0.88,
+      "label": "До авиаудара несколько минут",
+      "urgent": true,
+      "toParagraph": 18
+    },
+    {
+      "chapter": "8",
+      "page": 22,
+      "fromParagraph": 1,
+      "mood": "battle",
+      "intensity": 0.75,
+      "label": "Авиаудар: не триумф",
+      "urgent": false,
+      "toParagraph": 3
+    },
+    {
+      "chapter": "8",
+      "page": 22,
+      "fromParagraph": 4,
+      "mood": "sorrow",
+      "intensity": 0.75,
+      "label": "Последний разговор со Злобиным",
+      "urgent": true,
+      "toParagraph": 13
+    },
+    {
+      "chapter": "9",
+      "page": 8,
+      "fromParagraph": 5,
+      "mood": "sacred",
+      "intensity": 0.34,
+      "label": "Снова появляется смысл",
+      "urgent": false,
+      "toParagraph": 6
+    },
+    {
+      "chapter": "10",
+      "page": 2,
+      "fromParagraph": 7,
+      "mood": "mystery",
+      "intensity": 0.4,
+      "label": "Почему Оберег затаился",
+      "urgent": false,
+      "toParagraph": 7
+    }
+  ]
+}

@@ -1,15 +1,8 @@
 /**
- * Данные комикса «Легенда о Северном Царстве. Часть 1. Гиперборея».
- * - Главы 1–3 — авторские арты по меткам <<Глава_N.M>>
- *   (public/pages/chapter-N-art), вставленные в текст из sources/Гиперборея Демо.txt;
- * - Главы 4–5 — «роман-вебтун»: случайные иллюстрации (кадры + концепт-арты)
- *   чередуются с текстом из sources/Hyperborea Demo.txt;
- * - «Страница» читалки = элемент ленты: картинка (type:'image') либо текст (type:'text').
- * Главы 1–3 начинаются с текста (арты вставлены по меткам); главы 4–5 начинаются
- * с картинки; текст вставляется только по логическим границам абзацев
- * (ни одна фраза не обрывается посередине).
- * - Главы 6–10 — только текст из полной рукописи «Hyperborea.docx» (без картинок),
- *   см. src/data/book.js.
+ * Главы 1–3: авторские иллюстрации и текст.
+ * Главы 4–5: только текстовые блоки демо-рукописи.
+ * Главы 6–10: только текст полной рукописи из book.js.
+ * Номер страницы включает титул главы и каждый текстовый/иллюстративный блок.
  */
 
 import { BOOK_CHAPTERS } from './book.js';
@@ -337,38 +330,6 @@ const TEXTS = {
    Построение «страниц» (картинка или текст)
    ============================================================ */
 
-const FRAME_EXT = { '1': 'jpg', '2': 'png', '3': 'png' };
-
-/** Страница-кадр главы 1–3 (public/pages/chapter-N/webp/page-M-*.webp). */
-const makeFramePage = (chId, n) => {
-  const ext = chId === '3' && n === 5 ? 'jpg' : FRAME_EXT[chId];
-  const dir = `/pages/chapter-${chId}`;
-  const stem = `page-${pad(n)}`;
-  const webp = (w) => asset(`${dir}/webp/${stem}-${w}.webp`);
-  return {
-    type: 'image',
-    src: webp(1600),
-    srcset: `${webp(800)} 800w, ${webp(1200)} 1200w, ${webp(1600)} 1600w`,
-    fallback: asset(`${dir}/${stem}.${ext}`),
-    lqip: webp(40),
-  };
-};
-
-/** Концепт-арт как иллюстрация (public/images/art/webp/art-NN-*.webp). */
-const makeArtPage = (n) => {
-  const ext = n <= 10 ? 'jpg' : 'png';
-  const stem = `art-${pad(n)}`;
-  const dir = `/images/art`;
-  const webp = (w) => asset(`${dir}/webp/${stem}-${w}.webp`);
-  return {
-    type: 'image',
-    src: webp(1200),
-    srcset: `${webp(400)} 400w, ${webp(800)} 800w, ${webp(1200)} 1200w`,
-    fallback: asset(`${dir}/${stem}.${ext}`),
-    lqip: webp(40),
-  };
-};
-
 /** Авторские арты главы 1 по меткам <<Глава_1.N>> (public/pages/chapter-1-art). */
 const makeChapter1ArtPage = (n) => {
   const stem = `page-${pad(n)}`;
@@ -413,47 +374,7 @@ const makeChapter3ArtPage = (n) => {
   };
 };
 
-// Пул «случайных» иллюстраций: кадры 1–3 глав + все концепт-арты
-const buildPool = () => {
-  const pool = [];
-  for (let n = 1; n <= 10; n += 1) pool.push(makeFramePage('1', n));
-  for (let n = 1; n <= 5; n += 1) pool.push(makeFramePage('2', n));
-  for (let n = 1; n <= 5; n += 1) pool.push(makeFramePage('3', n));
-  for (let n = 1; n <= 19; n += 1) pool.push(makeArtPage(n));
-  return pool;
-};
-
-// Детерминированное перемешивание (одинаковый результат в каждом билде)
-const mulberry32 = (seed) => () => {
-  seed |= 0;
-  seed = (seed + 0x6d2b79f5) | 0;
-  let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
-  t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
-  return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-};
-
-const RANDOM_POOL = (() => {
-  const pool = buildPool();
-  const rnd = mulberry32(20260918);
-  for (let i = pool.length - 1; i > 0; i -= 1) {
-    const j = Math.floor(rnd() * (i + 1));
-    [pool[i], pool[j]] = [pool[j], pool[i]];
-  }
-  return pool;
-})();
-
 const textPage = (paragraphs) => ({ type: 'text', paragraphs });
-
-/** Чередует картинки и текстовые блоки (глава всегда начинается с картинки). */
-const merge = (imgs, texts, mode) => {
-  const items = [];
-  texts.forEach((t, idx) => {
-    if (imgs[idx]) items.push(imgs[idx]);
-    items.push(textPage(t));
-  });
-  for (let j = texts.length; j < imgs.length; j += 1) items.push(imgs[j]);
-  return items;
-};
 
 const withNum = (items) => items.map((it, i) => ({ ...it, num: i + 1 }));
 
@@ -1082,13 +1003,13 @@ export const chapters = [
     id: '4',
     title: 'Глава 4',
     subtitle: 'Алатырь-Оберег',
-    pages: withNum([chapterTitlePage, ...merge(RANDOM_POOL.slice(0, 7), TEXTS['4'], 'alt')]),
+    pages: withNum([chapterTitlePage, ...TEXTS['4'].map(textPage)]),
   },
   {
     id: '5',
     title: 'Глава 5',
     subtitle: 'Подземный мир',
-    pages: withNum([chapterTitlePage, ...merge(RANDOM_POOL.slice(7, 15), TEXTS['5'], 'alt')]),
+    pages: withNum([chapterTitlePage, ...TEXTS['5'].map(textPage)]),
   },
   ...BOOK_CHAPTERS.map(bookChapter),
 ];

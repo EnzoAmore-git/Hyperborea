@@ -1,5 +1,179 @@
 {
-  "version": 1,
-  "note": "Заполните states, чтобы включить заранее сгенерированные треки. Пока объект пуст, читалка использует встроенную процедурную тему.",
-  "states": {}
+  "version": 2,
+  "revision": "r2",
+  "provenance": "Original sparse additive synthesis; no neural model or third-party samples. No continuous bass drone.",
+  "bpm": 80,
+  "loopSeconds": 96,
+  "sampleRate": 32000,
+  "tonalFamily": "A natural minor / C major, common 80 BPM grid",
+  "states": {
+    "calm": {
+      "label": "Покой и близость",
+      "loopSeconds": 96,
+      "layers": [
+        {
+          "src": "audio/soundtrack/calm-bed-r2.ogg",
+          "gain": 1
+        },
+        {
+          "src": "audio/soundtrack/calm-detail-r2.ogg",
+          "gain": 1,
+          "from": 0,
+          "to": 0.85,
+          "floor": 0.4
+        },
+        {
+          "src": "audio/soundtrack/calm-motion-r2.ogg",
+          "gain": 1,
+          "from": 0.15,
+          "to": 0.85,
+          "floor": 0
+        }
+      ]
+    },
+    "mystery": {
+      "label": "Тайна и поиск",
+      "loopSeconds": 96,
+      "layers": [
+        {
+          "src": "audio/soundtrack/mystery-bed-r2.ogg",
+          "gain": 1
+        },
+        {
+          "src": "audio/soundtrack/mystery-detail-r2.ogg",
+          "gain": 1,
+          "from": 0,
+          "to": 0.85,
+          "floor": 0.4
+        },
+        {
+          "src": "audio/soundtrack/mystery-motion-r2.ogg",
+          "gain": 1,
+          "from": 0.15,
+          "to": 0.85,
+          "floor": 0
+        }
+      ]
+    },
+    "tension": {
+      "label": "Тревога и ожидание",
+      "loopSeconds": 96,
+      "layers": [
+        {
+          "src": "audio/soundtrack/tension-bed-r2.ogg",
+          "gain": 1
+        },
+        {
+          "src": "audio/soundtrack/tension-detail-r2.ogg",
+          "gain": 1,
+          "from": 0,
+          "to": 0.85,
+          "floor": 0.4
+        },
+        {
+          "src": "audio/soundtrack/tension-motion-r2.ogg",
+          "gain": 1,
+          "from": 0.15,
+          "to": 0.85,
+          "floor": 0
+        }
+      ]
+    },
+    "battle": {
+      "label": "Бой и прорыв",
+      "loopSeconds": 96,
+      "layers": [
+        {
+          "src": "audio/soundtrack/battle-bed-r2.ogg",
+          "gain": 1
+        },
+        {
+          "src": "audio/soundtrack/battle-detail-r2.ogg",
+          "gain": 1,
+          "from": 0,
+          "to": 0.85,
+          "floor": 0.4
+        },
+        {
+          "src": "audio/soundtrack/battle-motion-r2.ogg",
+          "gain": 1,
+          "from": 0.15,
+          "to": 0.85,
+          "floor": 0.12
+        }
+      ]
+    },
+    "sorrow": {
+      "label": "Скорбь и утрата",
+      "loopSeconds": 96,
+      "layers": [
+        {
+          "src": "audio/soundtrack/sorrow-bed-r2.ogg",
+          "gain": 1
+        },
+        {
+          "src": "audio/soundtrack/sorrow-detail-r2.ogg",
+          "gain": 1,
+          "from": 0,
+          "to": 0.85,
+          "floor": 0.4
+        },
+        {
+          "src": "audio/soundtrack/sorrow-motion-r2.ogg",
+          "gain": 1,
+          "from": 0.15,
+          "to": 0.85,
+          "floor": 0
+        }
+      ]
+    },
+    "horror": {
+      "label": "Ужас и Тьма",
+      "loopSeconds": 96,
+      "layers": [
+        {
+          "src": "audio/soundtrack/horror-bed-r2.ogg",
+          "gain": 1
+        },
+        {
+          "src": "audio/soundtrack/horror-detail-r2.ogg",
+          "gain": 1,
+          "from": 0,
+          "to": 0.85,
+          "floor": 0.4
+        },
+        {
+          "src": "audio/soundtrack/horror-motion-r2.ogg",
+          "gain": 1,
+          "from": 0.15,
+          "to": 0.85,
+          "floor": 0
+        }
+      ]
+    },
+    "sacred": {
+      "label": "Свет и надежда",
+      "loopSeconds": 96,
+      "layers": [
+        {
+          "src": "audio/soundtrack/sacred-bed-r2.ogg",
+          "gain": 1
+        },
+        {
+          "src": "audio/soundtrack/sacred-detail-r2.ogg",
+          "gain": 1,
+          "from": 0,
+          "to": 0.85,
+          "floor": 0.4
+        },
+        {
+          "src": "audio/soundtrack/sacred-motion-r2.ogg",
+          "gain": 1,
+          "from": 0.15,
+          "to": 0.85,
+          "floor": 0
+        }
+      ]
+    }
+  }
 }

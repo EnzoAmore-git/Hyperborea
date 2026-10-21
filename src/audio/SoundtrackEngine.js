@@ -4,7 +4,7 @@
  * Два режима:
  * 1) procedural — встроенная генеративная тема на Web Audio API (работает сразу,
  *    без аудиофайлов);
- * 2) assets — заранее сгенерированные нейромузыкальные лупы/стемы из
+ * 2) assets — заранее подготовленные музыкальные лупы/стемы из
  *    /audio/soundtrack/manifest.json (см. docs/soundtrack.md).
  *
  * Наружу движок отдаёт только setCue/start/stop/setVolume. Все переходы
@@ -229,83 +229,81 @@ class ProceduralVoice {
   }
 }
 
+const equalPowerCurve = (incoming, start = incoming ? 0 : 1) => {
+  const curve = new Float32Array(257);
+  for (let i = 0; i < curve.length; i += 1) {
+    const t = i / (curve.length - 1);
+    curve[i] = incoming
+      ? Math.sin(t * Math.PI / 2)
+      : start * Math.cos(t * Math.PI / 2);
+  }
+  return curve;
+};
+
 class AssetVoice {
-  constructor(engine, data, intensity) {
+  constructor(engine, data, intensity, mood) {
     this.engine = engine;
     this.ctx = engine.ctx;
     this.data = data;
-    this.intensity = clamp(intensity, 0, 1);
+    this.mood = mood;
     this.sources = [];
     this.layers = [];
     this.stopped = false;
-
     const now = this.ctx.currentTime;
+    const start = now + 0.05;
     this.output = this.ctx.createGain();
-    this.output.gain.setValueAtTime(0.0001, now);
-    this.output.gain.linearRampToValueAtTime(1, now + 4);
+    this.output.gain.setValueAtTime(0, now);
+    this.output.gain.setValueCurveAtTime(equalPowerCurve(true), start, 8);
     this.output.connect(engine.assetBus);
-
     data.buffers.forEach((buffer, index) => {
       const config = data.config.layers[index] ?? {};
       const source = this.ctx.createBufferSource();
       const gain = this.ctx.createGain();
+      const loop = Math.min(Number(data.config.loopSeconds) || buffer.duration, buffer.duration);
+      const offset = ((start - engine.transportEpoch) % loop + loop) % loop;
       source.buffer = buffer;
       source.loop = true;
+      source.loopStart = 0;
+      source.loopEnd = loop;
       source.connect(gain);
       gain.connect(this.output);
-      source.start(now + 0.03, 0);
+      source.start(start, offset);
       this.sources.push(source);
       this.layers.push({ gain, config });
     });
-
-    this.setIntensity(this.intensity, 0.3);
+    this.setIntensity(intensity, 0.01);
   }
 
-  setIntensity(value, timeConstant = 1.2) {
+  setIntensity(value, timeConstant = 4) {
     this.intensity = clamp(value, 0, 1);
     const now = this.ctx.currentTime;
     this.layers.forEach(({ gain, config }) => {
+      // No threshold means an always-on bed. Thresholded stems can reach silence.
       const from = Number(config.from ?? 0);
       const to = Number(config.to ?? 1);
-      let threshold = 1;
-      if (to > from) {
-        threshold = clamp((this.intensity - from) / (to - from), 0, 1);
-      } else if (this.intensity < from) {
-        threshold = 0;
-      }
-      const level = Number(config.gain ?? 1) * (0.18 + threshold * 0.82);
+      let threshold = config.from == null && config.to == null ? 1
+        : to > from ? clamp((this.intensity - from) / (to - from), 0, 1)
+          : Number(this.intensity >= from);
+      threshold = threshold * threshold * (3 - 2 * threshold);
+      const floor = clamp(Number(config.floor ?? 0), 0, 1);
+      const level = Number(config.gain ?? 1) * (floor + (1 - floor) * threshold);
       gain.gain.setTargetAtTime(level, now, timeConstant);
     });
   }
 
-  fadeOut(duration = 6) {
+  fadeOut(duration = 8) {
     if (this.stopped) return;
     this.stopped = true;
     const now = this.ctx.currentTime;
-    const end = now + duration;
-    this.output.gain.cancelScheduledValues(now);
-    this.output.gain.setValueAtTime(Math.max(0.0001, this.output.gain.value), now);
-    this.output.gain.exponentialRampToValueAtTime(0.0001, end);
-    this.sources.forEach((source) => {
-      try {
-        source.stop(end + 0.1);
-      } catch {
-        /* already stopped */
-      }
-    });
-    setTimeout(() => {
-      this.sources.forEach((source) => {
-        try {
-          source.disconnect();
-        } catch {
-          /* ignore */
-        }
-      });
-      try {
-        this.output.disconnect();
-      } catch {
-        /* ignore */
-      }
+    const held = this.output.gain.value;
+    if (this.output.gain.cancelAndHoldAtTime) this.output.gain.cancelAndHoldAtTime(now);
+    else this.output.gain.cancelScheduledValues(now);
+    this.output.gain.setValueCurveAtTime(equalPowerCurve(false, held), now + 0.05, duration);
+    this.sources.forEach((source) => { try { source.stop(now + duration + 0.15); } catch { /* stopped */ } });
+    this.cleanupTimer = setTimeout(() => {
+      this.sources.forEach((source) => source.disconnect());
+      this.layers.forEach(({ gain }) => gain.disconnect());
+      this.output.disconnect();
     }, (duration + 0.4) * 1000);
   }
 }
@@ -340,6 +338,10 @@ export class SoundtrackEngine {
     this.suspendTimer = null;
     this.onVisibility = null;
     this.visibilityBound = false;
+    this.transportEpoch = null;
+    this.activeMood = null;
+    this.lastMoodChange = -Infinity;
+    this.cueTimer = null;
   }
 
   ensureContext() {
@@ -452,6 +454,7 @@ export class SoundtrackEngine {
       clearTimeout(this.suspendTimer);
       this.suspendTimer = null;
     }
+    this.transportEpoch ??= ctx.currentTime;
     this.fadeMaster(this.volume * MASTER_LEVEL, 1.4);
     await this.loadManifest();
     if (session !== this.session || !this.enabled) return;
@@ -474,6 +477,10 @@ export class SoundtrackEngine {
 
   stop() {
     this.enabled = false;
+    clearTimeout(this.cueTimer);
+    this.cueTimer = null;
+    this.assetToken += 1;
+    this.activeMood = null;
     this.session += 1;
     this.stopScheduler();
     if (this.procVoice) {
@@ -499,16 +506,29 @@ export class SoundtrackEngine {
     const previous = this.cue;
     this.cue = cue;
     if (!this.enabled || !this.ctx) return;
-    if (previous?.mood === cue.mood) {
-      if (this.procVoice) this.procVoice.setIntensity(cue.intensity);
-      if (this.assetVoice) this.assetVoice.setIntensity(cue.intensity);
+    this.prefetchNext(cue);
+    // A pending transition to an old scene must not win a later fetch race.
+    if (previous?.mood !== cue.mood) this.assetToken += 1;
+    clearTimeout(this.cueTimer);
+    this.cueTimer = null;
+    if (this.activeMood === cue.mood) {
+      this.procVoice?.setIntensity(cue.intensity);
+      this.assetVoice?.setIntensity(cue.intensity);
       return;
     }
-    if (this.mode === 'assets') {
-      this.playAsset(cue);
-    } else {
-      this.switchProcedural(cue);
-    }
+    const hold = cue.urgent ? 0 : Math.max(0, 20 - (this.ctx.currentTime - this.lastMoodChange));
+    // 1.4 seconds of stability rejects scroll jitter. Only the latest cue is applied.
+    this.cueTimer = setTimeout(() => {
+      this.cueTimer = null;
+      if (!this.enabled) return;
+      if (this.mode === 'assets') this.playAsset(this.cue);
+      else this.switchProcedural(this.cue);
+    }, Math.max(1400, hold * 1000));
+  }
+
+  prefetchNext(cue) {
+    if (!this.manifest || !cue?.nextMood || navigator.connection?.saveData) return;
+    this.loadAssetState(cue.nextMood).catch(() => {});
   }
 
   setVolume(value) {
@@ -562,6 +582,12 @@ export class SoundtrackEngine {
       return { config, buffers };
     })();
     this.assetCache.set(mood, promise);
+    while (this.assetCache.size > 3) {
+      const key = [...this.assetCache.keys()].find((key) => key !== mood
+        && key !== this.activeMood && key !== this.cue?.nextMood);
+      if (!key) break;
+      this.assetCache.delete(key);
+    }
     try {
       return await promise;
     } catch (error) {
@@ -583,8 +609,12 @@ export class SoundtrackEngine {
         this,
         data,
         this.cue?.intensity ?? cue.intensity,
+        targetMood,
       );
-      if (old) old.fadeOut(6);
+      this.activeMood = targetMood;
+      this.lastMoodChange = this.ctx.currentTime;
+      this.prefetchNext(this.cue);
+      if (old) old.fadeOut(8);
       if (this.procVoice) {
         this.procVoice.fadeOut(6);
         this.procVoice = null;
@@ -593,7 +623,11 @@ export class SoundtrackEngine {
       this.onModeChange?.('assets');
       this.onStatus?.('ready');
     } catch (error) {
-      if (token !== this.assetToken) return;
+      if (token !== this.assetToken || session !== this.session || !this.enabled) return;
+      if (this.assetVoice) {
+        this.assetVoice.fadeOut(8);
+        this.assetVoice = null;
+      }
       // Если файл не загрузился/не декодировался, не оставляем читателя в тишине.
       console.warn('[soundtrack] assets unavailable, using procedural score', error);
       this.manifest = null;
@@ -607,6 +641,8 @@ export class SoundtrackEngine {
 
   startProcedural(cue) {
     if (!this.ctx || !cue) return;
+    this.activeMood = cue.mood;
+    this.lastMoodChange = this.ctx.currentTime;
     if (this.procVoice) {
       this.procVoice.fadeOut(5);
       this.procVoice = null;
@@ -619,6 +655,8 @@ export class SoundtrackEngine {
 
   switchProcedural(cue) {
     if (!this.ctx || !cue) return;
+    this.activeMood = cue.mood;
+    this.lastMoodChange = this.ctx.currentTime;
     const old = this.procVoice;
     this.procVoice = new ProceduralVoice(this, cue.mood, cue.intensity);
     if (old) old.fadeOut(5);
@@ -898,6 +936,9 @@ export class SoundtrackEngine {
     return {
       enabled: this.enabled,
       mode: this.mode,
+      activeMood: this.activeMood,
+      pendingTransition: Boolean(this.cueTimer),
+      transportEpoch: this.transportEpoch,
       cue: this.cue,
       context: this.ctx?.state ?? 'none',
       volume: this.volume,
@@ -913,6 +954,10 @@ export class SoundtrackEngine {
 
   dispose() {
     this.enabled = false;
+    clearTimeout(this.cueTimer);
+    this.cueTimer = null;
+    this.assetToken += 1;
+    this.activeMood = null;
     this.session += 1;
     this.assetToken += 1;
     this.stopScheduler();
