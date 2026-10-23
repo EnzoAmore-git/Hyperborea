@@ -629,7 +629,8 @@ input[type='radio'] {
 
 .hero__eyebrow {
   margin-bottom: var(--space-3);
-  color: var(--accent-blood);
+  color: var(--text-primary);
+  text-shadow: 0 1px 10px rgba(11, 10, 16, 0.95);
 }
 
 .hero__title {

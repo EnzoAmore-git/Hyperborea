@@ -104,7 +104,7 @@ export default function Hero() {
 
       <div className="hero__content container" data-hero-content>
         <motion.p className="hero__eyebrow meta" {...fadeUp(0.1)}>
-          Легенда о Северном Царстве · Веб-комикс · 18+
+          Легенда о Северном Царстве · Арт-бук · 18+
         </motion.p>
         <motion.h1 className="hero__title" {...riseLite(0.2)}>
           Гиперборея
