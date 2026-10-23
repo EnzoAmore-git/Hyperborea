@@ -15,7 +15,7 @@
  */
 import { createHash } from 'node:crypto';
 import { createReadStream, existsSync, readFileSync } from 'node:fs';
-import { copyFile, readFile, readdir, stat } from 'node:fs/promises';
+import { copyFile, readFile, readdir, stat, writeFile } from 'node:fs/promises';
 import { dirname, join, relative, resolve, sep } from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { Readable, Writable } from 'node:stream';
@@ -65,6 +65,7 @@ const keyPassphrase = env.DEPLOY_KEY_PASSPHRASE || undefined;
 const port = Number(env.DEPLOY_PORT || (protocol === 'ftp' ? 21 : 22));
 const ftpSecure = /^(1|true|yes)$/i.test(env.DEPLOY_FTP_SECURE || '');
 const remoteDirRaw = (env.DEPLOY_REMOTE_DIR || '').trim();
+const siteUrl = (env.DEPLOY_SITE_URL || '').trim().replace(/\/+$/, '');
 
 const fail = (message) => {
   console.error(`\n✖ ${message}\n`);
@@ -130,6 +131,18 @@ if (build.status !== 0) fail('Сборка завершилась с ошибк�
 
 const indexPath = join(DIST, 'index.html');
 if (!existsSync(indexPath)) fail('В dist/ нет index.html — сборка неполная.');
+
+// На собственной production-сборке заменяем URL GitHub Pages на основной домен.
+if (siteUrl) {
+  const publicOrigin = 'https://enzoamore-git.github.io/Hyperborea';
+  for (const rel of ['index.html', 'sitemap.xml']) {
+    const path = join(DIST, rel);
+    if (!existsSync(path)) continue;
+    const page = await readFile(path, 'utf8');
+    await writeFile(path, page.replaceAll(publicOrigin, siteUrl), 'utf8');
+  }
+  console.log(`SEO URLs настроены для ${siteUrl}.`);
+}
 
 const htaccessPath = join(ROOT, 'deploy', '.htaccess');
 if (existsSync(htaccessPath)) {
