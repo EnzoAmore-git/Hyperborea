@@ -19,6 +19,7 @@ import { READING_POSITION_VERSION, migrateReadingPosition } from '../data/reader
 import { useSaveData } from '../hooks/useSaveData.js';
 import { useFocusTrap } from '../lib/focusTrap.js';
 import { useAdaptiveSoundtrack } from '../hooks/useAdaptiveSoundtrack.js';
+import { setPageSeo } from '../lib/seo.js';
 import ReaderError from './ReaderError.jsx';
 
 const POSITION_KEY = 'hyperborea:reading-position';
@@ -111,6 +112,24 @@ export default function ComicReader() {
   const exitRef = useRef(null);
 
   const ch = chapterId ? getChapter(chapterId) : null;
+
+  useEffect(() => {
+    if (!ch) {
+      setPageSeo({
+        title: 'Глава не найдена — Гиперборея',
+        description: 'Запрошенная глава не найдена. Откройте список глав веб-комикса «Гиперборея».',
+        type: 'article',
+        robots: 'noindex, follow',
+      });
+      return;
+    }
+
+    setPageSeo({
+      title: `${ch.title}: ${ch.subtitle} — стр. ${pageNum} — Гиперборея`,
+      description: `Читайте ${ch.title.toLowerCase()} «${ch.subtitle}» веб-комикса «Гиперборея — Легенда о Северном Царстве». Страница ${pageNum}.`,
+      type: 'article',
+    });
+  }, [ch, pageNum]);
 
   useEffect(() => {
     if (resumeNotice?.ch === chapterId && resumeNotice.pg === pageNum) {

@@ -1,13 +1,14 @@
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { setPageSeo } from '../lib/seo.js';
 
 export default function NotFoundPage() {
   useEffect(() => {
-    const meta = document.createElement('meta');
-    meta.name = 'robots';
-    meta.content = 'noindex';
-    document.head.appendChild(meta);
-    return () => meta.remove();
+    setPageSeo({
+      title: 'Страница не найдена — Гиперборея',
+      description: 'Запрошенная страница не найдена. Вернитесь на сайт «Гиперборея — Легенда о Северном Царстве».',
+      robots: 'noindex, follow',
+    });
   }, []);
 
   return (

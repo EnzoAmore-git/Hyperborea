@@ -7,9 +7,17 @@ import Support from '../components/Support.jsx';
 import ErrorBoundary from '../components/ErrorBoundary.jsx';
 import { initScrollReveal } from '../animations/scrollReveal.js';
 import { initParallax } from '../animations/parallax.js';
+import { setPageSeo } from '../lib/seo.js';
+
+const HOME_SEO = {
+  title: 'Гиперборея — Легенда о Северном Царстве',
+  description: 'Гиперборея — «Легенда о Северном Царстве»: авторский веб-комикс и арт-бук в жанре городского тёмного фэнтези. Читайте главы онлайн.',
+  type: 'website',
+};
 
 export default function HomePage() {
   useEffect(() => {
+    setPageSeo(HOME_SEO);
     let cancelled = false;
     let stopReveal = () => {};
     let stopParallax = () => {};
