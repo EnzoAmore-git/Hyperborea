@@ -50,6 +50,7 @@ export default defineConfig(({ mode }) => {
         },
         workbox: {
           navigateFallback: `${base}index.html`,
+          navigateFallbackDenylist: [/\/sitemap\.xml$/],
           // Преcache: только критичные и WebP-производные (оригиналы JPG/PNG
           // — лишь fallback для <picture>, их 3-4 МБ в SW не кладём)
           globPatterns: ['**/*.{js,css,html,woff2,svg,webp}'],
