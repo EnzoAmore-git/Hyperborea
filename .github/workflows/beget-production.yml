@@ -1,0 +1,63 @@
+name: Deploy to Beget production
+
+on:
+  push:
+    branches: [production-beget]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: beget-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    environment:
+      name: beget-production
+      url: https://hyperborea-legends.ru/
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci
+      - name: Publish over FTPS
+        env:
+          DEPLOY_PROTOCOL: ftp
+          DEPLOY_HOST: zakharau.beget.tech
+          DEPLOY_PORT: '21'
+          DEPLOY_USER: zakharau_hyperborea
+          DEPLOY_PASSWORD: ${{ secrets.BEGET_FTPS_PASSWORD }}
+          DEPLOY_REMOTE_DIR: /
+          DEPLOY_FTP_SECURE: 'true'
+          DEPLOY_FTP_WEB_ROOT: 'true'
+          DEPLOY_SITE_URL: https://hyperborea-legends.ru
+          BEGET_CA_PEM: ${{ secrets.BEGET_FTPS_CA_PEM }}
+        run: |
+          set -eu
+          if [ -z "$DEPLOY_PASSWORD" ]; then
+            echo "::error::Set BEGET_FTPS_PASSWORD in the beget-production environment."
+            exit 1
+          fi
+          if [ -n "$BEGET_CA_PEM" ]; then
+            umask 077
+            ca_file="$(mktemp "$RUNNER_TEMP/beget-ca.XXXXXX")"
+            trap 'rm -f -- "$ca_file"' EXIT
+            printf '%s\n' "$BEGET_CA_PEM" > "$ca_file"
+            export NODE_EXTRA_CA_CERTS="$ca_file"
+          fi
+          unset BEGET_CA_PEM
+          npm run deploy
+      - name: Verify the deployed build over HTTPS
+        run: |
+          set -eu
+          curl --fail --silent --show-error --retry 3 --max-time 20 \
+            -o "$RUNNER_TEMP/beget-index.html" \
+            "https://hyperborea-legends.ru/?deploy=${GITHUB_SHA}"
+          cmp dist/index.html "$RUNNER_TEMP/beget-index.html"

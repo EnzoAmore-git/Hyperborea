@@ -1,0 +1,11 @@
+/* ============================================================
+   Точка входа стилей. Порядок подключения важен:
+   tokens → fonts → base → components → layout → effects (Этап 5)
+   ============================================================ */
+
+@import './styles/tokens.css';
+@import './styles/fonts.css';
+@import './styles/base.css';
+@import './styles/components.css';
+@import './styles/layout.css';
+@import './styles/effects.css';

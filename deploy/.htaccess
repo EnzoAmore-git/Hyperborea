@@ -1,0 +1,39 @@
+# SPA-фолбэк для Apache: любой несуществующий путь отдаёт index.html.
+# Без этого прямые ссылки вида /read/6/1 на статическом хостинге дают 404.
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+  Options -MultiViews
+  RewriteRule ^index\.html$ - [L]
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule . /index.html [L]
+</IfModule>
+
+DirectoryIndex index.html
+
+# Корректные MIME-типы, если хостинг их не знает.
+<IfModule mod_mime.c>
+  AddType application/manifest+json .webmanifest
+  AddType image/webp .webp
+  AddType font/woff2 .woff2
+</IfModule>
+
+# Долгий кеш для хешированных ассетов (имена меняются при сборке).
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType application/javascript "access plus 1 year"
+  ExpiresByType text/css "access plus 1 year"
+  ExpiresByType image/webp "access plus 1 year"
+  ExpiresByType image/png "access plus 1 year"
+  ExpiresByType image/jpeg "access plus 1 year"
+  ExpiresByType image/svg+xml "access plus 1 month"
+  ExpiresByType font/woff2 "access plus 1 year"
+</IfModule>
+
+# Точку входа и service worker не кешируем, иначе обновления не долетают.
+<IfModule mod_headers.c>
+  <FilesMatch "^(index\.html|sw\.js|manifest\.webmanifest)$">
+    Header set Cache-Control "no-cache, must-revalidate"
+  </FilesMatch>
+</IfModule>

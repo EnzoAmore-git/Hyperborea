@@ -1,0 +1,122 @@
+/* ============================================================
+   Layout-сетка и брейкпоинты (mobile-first, только min-width).
+   Мобайл  (<768px)     : 4 колонки · гуттер 16px · контент 100%
+   Планшет (≥768px)     : 8 колонок · гуттер 24px
+   Десктоп (≥1024px)    : 12 колонок · гуттер 32px · контейнер 1280px
+   Расстояния между блоками кратны 8px (--space-*).
+   ============================================================ */
+
+.container {
+  width: 100%;
+  max-width: var(--container);
+  margin-inline: auto;
+  padding-inline: var(--gutter-mobile);
+}
+
+.container--wide {
+  max-width: var(--container-wide);
+}
+
+/* Секция, выходящая на края экрана (full-bleed): фон на всю ширину,
+   контент внутри — через вложенный .container */
+.full-bleed {
+  width: 100vw;
+  margin-inline: calc(50% - 50vw);
+}
+
+/* Вертикальный ритм секций — clamp(4rem, 10vw, 8rem) */
+.section {
+  padding-block: var(--section-pad);
+}
+
+/* Базовая сетка: колонки переключаются по брейкпоинтам.
+   Используется как каркас секций; вложенные сетки компонентов
+   задаются в самих компонентах поверх этой. */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--space-3);
+}
+
+.grid > .span-all {
+  grid-column: 1 / -1;
+}
+
+/* Утилиты отступов (кратны 8px) */
+.mt-1 { margin-top: var(--space-1); }
+.mt-2 { margin-top: var(--space-2); }
+.mt-3 { margin-top: var(--space-3); }
+.mt-4 { margin-top: var(--space-4); }
+.mb-1 { margin-bottom: var(--space-1); }
+.mb-2 { margin-bottom: var(--space-2); }
+.mb-3 { margin-bottom: var(--space-3); }
+.mb-4 { margin-bottom: var(--space-4); }
+
+/* Якоря секций не прячутся под фиксированный navbar */
+section[id] {
+  scroll-margin-top: 88px;
+}
+
+@media (min-width: 768px) {
+  .container {
+    padding-inline: var(--gutter-tablet);
+  }
+
+  .grid {
+    grid-template-columns: repeat(8, minmax(0, 1fr));
+    gap: var(--space-4);
+  }
+}
+
+@media (min-width: 1024px) {
+  .container {
+    padding-inline: var(--gutter-desktop);
+  }
+
+  .grid {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+  }
+}
+
+/* ---------- 404 (Этап 6.5): «Страница поглощена тьмой» ---------- */
+.not-found {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: 72vh;
+  text-align: center;
+}
+
+.not-found__inner {
+  display: grid;
+  gap: var(--space-4);
+  justify-items: center;
+}
+
+.not-found__runes {
+  letter-spacing: 0.35em;
+  opacity: 0.55;
+}
+
+.not-found__title {
+  font-family: var(--font-display);
+  font-size: clamp(6rem, 16vw, 11rem);
+  line-height: 0.9;
+  background: linear-gradient(180deg, var(--text-primary), var(--text-muted));
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+.not-found__text {
+  max-width: 34rem;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.not-found__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  justify-content: center;
+}
