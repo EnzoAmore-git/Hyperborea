@@ -1,5 +1,5 @@
 /** v2 removes the temporary illustrations from chapters 4 and 5. */
-export const READING_POSITION_VERSION = '3';
+export const READING_POSITION_VERSION = '4';
 const LEGACY_PAGES = {
   "4": {
     "1": 1,
@@ -46,11 +46,16 @@ const DEMO_PAGE_MAP = [
   [1,2,2,3,5,6,8,9],
 ];
 
+// Chapter 6 now includes artwork and explicit scene breaks.
+const CHAPTER_6_PAGE_MAP = [1, 2, 4, 7, 7, 8, 10, 12, 15, 15, 16];
+
 export const migrateReadingPosition = (saved, version) => {
   if (!saved || version === READING_POSITION_VERSION) return saved;
   const ch = String(saved.ch);
   const page = Number(saved.pg);
   if (!Number.isInteger(page) || page < 1) return null;
+  if (ch === '6') return { ch, pg: CHAPTER_6_PAGE_MAP[page - 1] ?? page };
+  if (version === '3') return { ch, pg: page };
   const v2Page = version === '2' ? page : (LEGACY_PAGES[ch]?.[page] ?? page);
   return { ch, pg: DEMO_PAGE_MAP[Number(ch) - 1]?.[v2Page - 1] ?? v2Page };
 };

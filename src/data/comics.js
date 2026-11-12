@@ -17,17 +17,17 @@ const makeChapter = ({ id, subtitle, pages }) => ({
   id,
   title: `Глава ${id}`,
   subtitle,
-  pages: [chapterTitlePage, ...pages].map((page, index) => ({ ...page, num: index + 1 })),
+  pages: [chapterTitlePage, ...pages].map((page, index) => ({
+    ...(page.type === 'img' ? illustration(page) : page),
+    num: index + 1,
+  })),
 });
 
 export const chapters = [
-  ...DEMO_CHAPTERS.map(({ pages, ...chapter }) => makeChapter({
+  ...DEMO_CHAPTERS.map(makeChapter),
+  ...BOOK_CHAPTERS.map(({ blocks, pages, ...chapter }) => makeChapter({
     ...chapter,
-    pages: pages.map((page) => page.type === 'img' ? illustration(page) : page),
-  })),
-  ...BOOK_CHAPTERS.map(({ blocks, ...chapter }) => makeChapter({
-    ...chapter,
-    pages: blocks.map((paragraphs) => ({ type: 'text', paragraphs })),
+    pages: pages ?? blocks.map((paragraphs) => ({ type: 'text', paragraphs })),
   })),
 ];
 
